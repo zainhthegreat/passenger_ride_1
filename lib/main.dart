@@ -2,8 +2,13 @@ import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:passenger/core/modals/CreateUserRequestModal.dart';
+import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/features/custom-rides/presentation/pages/school_Business.dart';
 import 'package:passenger/features/custom-rides/presentation/pages/custom-ridesScreen.dart';
+import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
+import 'package:passenger/features/sigin/presentation/pages/siginInScreen.dart';
+import 'package:passenger/features/signup/presentation/pages/signUpScreen.dart';
 import 'features/Drawer/presentation/pages/DrawerMaster.dart';
 import 'features/your-trips/presentation/pages/your-trips.dart  ';
 import 'package:flutter/foundation.dart';
@@ -46,10 +51,12 @@ import 'package:passenger/features/welcome/presentation/pages/welcomeScreen.dart
 import 'package:provider/provider.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
 
-
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -58,97 +65,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-return     ChangeNotifierProvider<JourneyProvider>(
-    create: (context) => JourneyProvider(),
-child: MaterialApp(
-  home: Welcome(),
-) ,
-);
-
-    return  MaterialApp(
-      home: Welcome(),
-    );
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Ride App',
-      home: Your_trips(),
-    );
-  }
-}
-
-class ExampleExpert extends StatefulWidget {
-  @override
-  _ExampleExpertState createState() => _ExampleExpertState();
-}
-
-class _ExampleExpertState extends State<ExampleExpert> {
-  GlobalKey<ExpandableBottomSheetState> key = new GlobalKey();
-  int _contentAmount = 0;
-  ExpansionStatus _expansionStatus = ExpansionStatus.contracted;
-
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-
-      body: ExpandableBottomSheet(
-        //use the key to get access to expand(), contract() and expansionStatus
-        key: key,
-
-        //optional
-        //callbacks (use it for example for an animation in your header)
-        onIsContractedCallback: () => print('contracted'),
-        onIsExtendedCallback: () => print('extended'),
-
-        //optional; default: Duration(milliseconds: 250)
-        //The durations of the animations.
-        animationDurationExtend: Duration(milliseconds: 500),
-        animationDurationContract: Duration(milliseconds: 250),
-
-        //optional; default: Curves.ease
-        //The curves of the animations.
-        animationCurveExpand: Curves.bounceOut,
-        animationCurveContract: Curves.ease,
-
-        //optional
-        //The content extend will be at least this height. If the content
-        //height is smaller than the persistentContentHeight it will be
-        //animated on a height change.
-        //You can use it for example if you have no header.
-        persistentContentHeight: 100,
-
-        //required
-        //This is the widget which will be overlapped by the bottom sheet.
-        background: Container(
-          // color: Colors.blue[800],
-        ),
-
-        //optional
-        //This widget is sticking above the content and will never be contracted.
-        persistentHeader: Container(
-          color: Colors.orange,
-          constraints: BoxConstraints.expand(height: 40),
-          child: Center(
-            child: Container(
-              height: 8.0,
-              width: 50.0,
-              color: Color.fromARGB((0.25 * 255).round(), 0, 0, 0),
-            ),
-          ),
-        ),
-
-        //required
-        //This is the content of the bottom sheet which will be extendable by dragging.
-        expandableContent: Container(
-            constraints: BoxConstraints(maxHeight: 800),
-            child: SingleChildScrollView(child: ListView. builder(itemBuilder: (context, index) => Container(child: Text('Heyy $index',style: TextStyle(color: Colors.black,fontSize: 25)),),itemCount: 25,))
-        ),
-
-        //optional
-        //This is a widget aligned to the bottom of the screen and stays there.
-        //You can use this for example for navigation.
-
+    return MultiProvider(providers: [
+      ChangeNotifierProvider<JourneyProvider>(
+        create: (_) => JourneyProvider(),
       ),
+      ChangeNotifierProvider<CreateUserRequestModal>(
+        create: (_) => CreateUserRequestModal(),
+      ),
+      ChangeNotifierProvider<UserModal>(
+        create: (_) => UserModal(),
+      ),
+      // CreateUserRequestModal
+      // UserModal
+
+    ],
+      child: MaterialApp(
+        home: SiginUp/*SiginUpScreen*/(),
+      ) ,
     );
+
+
+
   }
 }
 

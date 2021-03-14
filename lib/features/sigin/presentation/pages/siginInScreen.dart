@@ -168,15 +168,6 @@ hintText: "Password",
             ),
 
 
-            // enabledBorder: UnderlineInputBorder(
-            //   borderSide: BorderSide(color: Colors.transparent),
-            // ),
-            // focusedBorder: UnderlineInputBorder(
-            //   borderSide: BorderSide(color: Colors.transparent),
-            // ),
-            // border: UnderlineInputBorder(
-            //   borderSide: BorderSide(color:  Colors.transparent),
-            // ),
           )
       ),
     );

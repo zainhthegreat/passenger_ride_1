@@ -2,6 +2,8 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:otp_text_field/otp_field.dart';
+import 'package:otp_text_field/style.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
@@ -86,7 +88,7 @@ startTimer();
 
                   appContext: context,
                   pastedTextStyle: TextStyle(
-                    color: Mycolor.backgroundColor,
+                    color: Mycolor.h1color,
                     fontWeight: FontWeight.bold,
                   ),
 
@@ -107,15 +109,16 @@ startTimer();
                     borderRadius: BorderRadius.circular(5),
                     fieldHeight: 50,
                     fieldWidth: 40,
-                    activeFillColor:
-                   /* hasError ? Colors.orange : */Colors.white,
-                    activeColor: Colors.white,
-                    disabledColor: Colors.white,
 
-                    inactiveColor: Colors.white,
-                    inactiveFillColor: Colors.white,
-                    selectedColor: Colors.white,
-                    selectedFillColor: Colors.white,
+                    activeFillColor:
+                   /* hasError ? Colors.orange : */Colors.grey,
+                    activeColor: Colors.grey,
+                    disabledColor: Colors.grey,
+
+                    inactiveColor: Colors.grey,
+                    inactiveFillColor: Colors.grey,
+                    selectedColor: Colors.grey,
+                    selectedFillColor: Colors.grey,
                   ),
                   cursorColor: Colors.black,
                   animationDuration: Duration(milliseconds: 300),
@@ -125,13 +128,13 @@ startTimer();
                   // errorAnimationController: errorController,
                   controller: otpctrl,
                   keyboardType: TextInputType.number,
-                  // boxShadows: [
-                  //   BoxShadow(
-                  //     offset: Offset(0, 1),
-                  //     color: Colors.black12,
-                  //     blurRadius: 10,
-                  //   )
-                  // ],
+                  boxShadows: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      color: Colors.black12,
+                      blurRadius: 10,
+                    )
+                  ],
                   onCompleted: (v) {
                     print("Completed");
                   },
@@ -152,8 +155,8 @@ startTimer();
                   },
                 ),
 
-
-                  _buttonText('Forgot password?', () {}),
+                  //
+                  // _buttonText('Forgot password?', () {}),
 
                   _CircleIconButton('Resend Code in ',_start.toString()+' seconds', () {
 Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),));
@@ -170,6 +173,24 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),)
     ));
   }
 
+  _getOTPWidget(){
+    return OTPTextField(
+      length: 5,
+      width: MediaQuery.of(context).size.width,
+      textFieldAlignment: MainAxisAlignment.spaceAround,
+      fieldWidth: 50,
+      fieldStyle: FieldStyle.underline,
+      style: TextStyle(
+          fontSize: 17
+      ),
+      onChanged: (pin) {
+        print("Changed: " + pin);
+      },
+      onCompleted: (pin) {
+        print("Completed: " + pin);
+      },
+    );
+  }
 
   _getcountryDropDown(fun) {
     return CountryCodePicker(

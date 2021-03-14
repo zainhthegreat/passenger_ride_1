@@ -11,12 +11,12 @@ import 'package:regexpattern/regexpattern.dart';
 import 'dart:async';
 import 'package:passenger/features/sigin/presentation/pages/siginInScreen.dart';
 
-class Welcome  extends StatefulWidget {
+class SiginUpScreen  extends StatefulWidget {
   @override
   _SiginUpState createState() => _SiginUpState();
 }
 
-class _SiginUpState extends State<Welcome> {
+class _SiginUpState extends State<SiginUpScreen> {
 
 
 

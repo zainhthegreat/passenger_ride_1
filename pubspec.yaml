@@ -21,45 +21,38 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+
+#  Firebase
+  firebase_auth: ^1.0.1
+
+
   # maps
-#  flutter_map: ^0.10.1+1
-#  google_maps_place_picker: ^1.0.1
-#  google_map_location_picker: ^4.1.2+1
-#  google_place: ^0.3.3
 
-  google_maps_flutter: 1.0.5
-
+  google_maps_flutter: ^2.0.1
 #  flutter_plugin_android_lifecycle: ^1.0.11
   draggable_bottom_sheet: ^0.1.2
-
   #ui component
   carousel_slider: ^2.3.1
   multilevel_drawer: ^1.0.3
   flutter_rating_bar: ^3.2.0+1
   flutter_credit_card: 0.1.4
   flutter_otp: ^0.3.2
-
+  otp_text_field: ^1.1.0
 
   # font & color
   hexcolor: ^1.0.6
-  google_fonts: ^1.1.1
+  google_fonts: ^2.0.0
 
-  otp_text_field: ^1.0.2
 
   #file choosing lib
-  image_picker: ^0.6.7+21
+#  image_picker: ^0.6.7+21
+  image_picker: ^0.7.2+1
 
   #dateTime
-  intl: ^0.16.1
-
+  intl: ^0.17.0
   #  state management
-
   provider: ^4.3.2+4
   expandable_bottom_sheet: ^0.2.1+1
-
-
-
-
   #maps
   google_maps: ">=3.0.0 <4.0.0"
 
@@ -77,7 +70,14 @@ dependencies:
   country_code_picker: ^1.7.0
   regexpattern: ^1.0.0
 
+
+  json_annotation: 3.1.1
+
+
+
 dev_dependencies:
+  build_runner: ^1.0.0
+  json_serializable: 3.5.1
   flutter_test:
     sdk: flutter
 
