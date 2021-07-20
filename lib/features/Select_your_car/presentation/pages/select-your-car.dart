@@ -40,11 +40,115 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:passenger/features/select-car-1/presentation/pages/select_car_1.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
 import 'package:passenger/general/BottomWidgets.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/features/Select_your_car/presentation/pages/select-your-car.dart';
+import 'package:passenger/general/CommonWidgets.dart';
+import 'package:passenger/general/strings.dart';
+import 'package:passenger/general/variables.dart';
+import 'package:regexpattern/regexpattern.dart';
+import 'dart:async';
+import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:passenger/general/CommonWidgets.dart';
+import 'package:passenger/general/strings.dart';
+import 'package:passenger/general/variables.dart';
+import 'package:regexpattern/regexpattern.dart';
+import 'package:passenger/features/signup/presentation/pages/signUpScreen.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/general/CommonWidgets.dart';
+import 'package:passenger/general/strings.dart';
+import 'package:passenger/general/variables.dart';
+import 'package:regexpattern/regexpattern.dart';
+import 'dart:async';
+import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:passenger/general/CommonWidgets.dart';
+import 'package:passenger/general/strings.dart';
+import 'package:passenger/general/variables.dart';
+import 'package:regexpattern/regexpattern.dart';
+import 'package:passenger/features/signup/presentation/pages/signUpScreen.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:passenger/features/Add_payment/presentation/pages/add_payment.dart';
+import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
+import 'package:passenger/core/modals/FleetRequestModal.dart';
+import 'package:passenger/core/modals/AvailableServicesRequestModal.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/features/passenger-profile/presentation/pages/PassengerProfileScreen.dart';
+import 'package:passenger/general/CommonWidgets.dart';
+import 'package:passenger/general/strings.dart';
+import 'package:passenger/general/variables.dart';
+import 'package:regexpattern/regexpattern.dart';
+import 'dart:async';
+import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
+// import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
+import 'package:passenger/features/passenger-profile/presentation/pages/PassengerProfileScreen.dart';
+import 'package:passenger/general/CommonWidgets.dart';
+import 'package:passenger/general/strings.dart';
+import 'package:passenger/general/variables.dart';
+import 'package:regexpattern/regexpattern.dart';
+import 'dart:async';
+import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:passenger/core/services/BookingRoutine/BookingRoutine.dart';
+import 'package:search_map_place/search_map_place.dart';
+
+// Your api key storage.
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:passenger/features/select-car-1/presentation/pages/select_car_1.dart';
+import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
+import 'package:passenger/general/BottomWidgets.dart';
+import 'package:passenger/core/modals/BookingRequestModal.dart';
 
 // Your api key storage.
 import 'package:provider/provider.dart';
 
+import '../../../../util.dart';
+
 class Select_your_car extends StatefulWidget {
+  FleetRequestModal fleetRequestModal;
+  BookingRoutine bookingRoutine;
+  Select_your_car({
+    @required this.fleetRequestModal,
+    @required this.bookingRoutine,
+
+  });
   @override
   _Select_your_carState createState() => _Select_your_carState();
 }
@@ -82,6 +186,8 @@ class _Select_your_carState extends State<Select_your_car> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return SafeArea(
         child: Scaffold(
       backgroundColor:Mycolor.electricGreen,
@@ -95,7 +201,6 @@ class _Select_your_carState extends State<Select_your_car> {
           children: [
 
             GoogleMap(
-              zoomControlsEnabled: false,
 
               mapType: MapType.normal,
               initialCameraPosition: _kGooglePlex,
@@ -114,7 +219,8 @@ class _Select_your_carState extends State<Select_your_car> {
                 child: Column(
                   mainAxisAlignment:MainAxisAlignment.spaceBetween ,
                   children: [
-                    _getFromToTripTile('Centaurus Mall','FAST NUCES Islamabad'),
+                    _getFromToTripTile(widget.bookingRoutine.getBookingLocatiion().startLocation.toString(),widget.bookingRoutine.getBookingLocatiion().endLocation.toString()),
+
 
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -136,9 +242,88 @@ class _Select_your_carState extends State<Select_your_car> {
                                   Icon(Icons.keyboard_arrow_down_rounded,size: 25,color:  Mycolor.h1color.withOpacity(0.5),)
                                 ],
                               ),
-                              _fleetIcon('Bike','100',DateTime.now(),'assets/ui/vehicles/bike.png'),
-                              _fleetIcon('Semi','100',DateTime.now(),'assets/ui/vehicles/semi.png'),
-                              _fleetIcon('Pro','100',DateTime.now(),'assets/ui/vehicles/pro.png'),
+                              FutureBuilder(
+                                future: widget.bookingRoutine.getServicesfromLocal(),
+                                builder: (context, snapshot) {
+                                  if(snapshot.hasData){
+                                    List<AvailableServicesRequestModal>  availableServicesRequestModal= snapshot.data;
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: availableServicesRequestModal.length,
+                                      itemBuilder:   (context, index) => FlatButton(
+                                        splashColor: Colors.blue,
+                                        onPressed: () async {
+                                         var res =  await widget.bookingRoutine.addBookingfromRemote(
+                                              BookingRequestModal(
+
+                                                fleetId:  widget.fleetRequestModal.fleetId,
+                                                passengerId: widget.bookingRoutine.user.uid,
+                                                serviceId: availableServicesRequestModal[index].serviceId,
+                                                arrivedAtLocationTime: 0,
+
+
+                                                bookingId : getRandomString(22),
+                                                businessId : "string",
+
+                                                driverId : "string",
+                                                vehicleId : "string",
+                                                bookingZoneId : "string",
+                                                rideBookingTime : 0,
+
+                                                rideStartTime : 0,
+                                                pob1Id : "string",
+                                                pob2Id : "string",
+                                                estimatedDistance : 0,
+                                                estimatedFare : 0,
+                                                estimatedTime : 0,
+                                                waitingTime : 0,
+                                                distanceTravelled : 0,
+                                                timeTaken : 0,
+                                                fleetSurcharge : 0,
+                                                fleetDiscount : 0,
+                                                subTotal : 0,
+                                                finalTotal : 0,
+                                                driverRating : 0,
+                                                driverComments : "string",
+                                                passengerRating : 0,
+                                                passengerComments : "string",
+                                                tip : 0,
+                                                driverEarningRecordId : getRandomString(30),
+
+                                              )
+
+                                          );
+
+                                         if(res!=null){
+
+                                           BookingRequestModal bookingresponse =res;
+                                           Alert(
+                                             title: "Booking Added",
+                                             desc: "Booking Added Successful with id ${bookingresponse.bookingId}" ,
+                                             context: context,
+                                             type: AlertType.success,
+                                             buttons: [
+                                               DialogButton(
+                                                 child: Text("okay"),
+                                                 onPressed: () => Navigator.pop(context),
+                                               )
+                                             ],
+                                           ).show();
+                                           print("BOOKING ADDED SUCCESSFUL");
+                                         }
+
+                                        },
+                                        child: _fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].serviceFare,availableServicesRequestModal[index].arrivalTime,'assets/ui/vehicles/pro.png'),
+                                      ),
+                                    );
+
+                                  }
+                                  return Text("Loading");
+                                },
+
+                              ),
+
+
                               Container(color: Mycolor.h1color.withOpacity(0.5),height: 1,width: MediaQuery.of(context).size.width * 0.8,),
                               Row(
                                 mainAxisAlignment:MainAxisAlignment.spaceAround ,
@@ -180,11 +365,11 @@ class _Select_your_carState extends State<Select_your_car> {
                         ),
 
 
-                        _CurvedBigBlueButton('Lets Go',(){
-
-                          Navigator.push(context,MaterialPageRoute(builder: (context) => Select_your_fleet(),));
-
-                        }),
+                        // _CurvedBigBlueButton('Lets Go',(){
+                        //
+                        //   Navigator.push(context,MaterialPageRoute(builder: (context) => Select_your_fleet(),));
+                        //
+                        // }),
 
 
 
@@ -201,8 +386,8 @@ class _Select_your_carState extends State<Select_your_car> {
       ),
     ));
   }
-  _fleetIcon(vehicle,price,DateTime dt,img){
-
+  _fleetIcon(vehicle,price, localdt,img){
+    DateTime dt = DateTime.now();
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Row(
@@ -210,19 +395,24 @@ class _Select_your_carState extends State<Select_your_car> {
 
         children: [
           Image.asset(img, width: 70,),
-          Column(
-            mainAxisAlignment:MainAxisAlignment.start,
-            crossAxisAlignment:CrossAxisAlignment.start ,
+          Container(width: 10,),
+          Expanded(
+            child: Column(
+              mainAxisAlignment:MainAxisAlignment.start,
+              crossAxisAlignment:CrossAxisAlignment.start ,
 
-            children: [
-              Text(vehicle,style:  GoogleFonts.poppins(color: Mycolor.h1color
-                  ,fontSize: 16,fontWeight: FontWeight.bold),),
-              Row(children: [Icon(Icons.access_time,size: 15,),
-              Container(width: 2,),
-              Text(DateFormat('h:mm a').format(dt),style:  GoogleFonts.poppins(color: Mycolor.h1color,fontSize: 16,fontWeight: FontWeight.bold),)
-              ],)
-            ],
+              children: [
+                Text(vehicle,style:  GoogleFonts.poppins(color: Mycolor.h1color
+                    ,fontSize: 16,fontWeight: FontWeight.bold),),
+                Row(children: [Icon(Icons.access_time,size: 15,),
+                Container(width: 2,),
+                Text(DateFormat('h:mm a').format(dt),style:  GoogleFonts.poppins(color: Mycolor.h1color,fontSize: 16,fontWeight: FontWeight.bold),)
+                ],)
+              ],
+            ),
           ),
+          Container(width: 10,),
+
           Column(
             mainAxisAlignment:MainAxisAlignment.end ,
             crossAxisAlignment:CrossAxisAlignment.end ,
@@ -231,7 +421,7 @@ class _Select_your_carState extends State<Select_your_car> {
                 Image.asset('assets/ui/vehicles/denominnation.png',height: 12,),
                 Container(width: 5,),
 
-                Text(price+' PKR',style: GoogleFonts.poppins(color: Mycolor.electricGreen,fontSize: 16,fontWeight: FontWeight.bold),)
+                Text('${price} PKR',style: GoogleFonts.poppins(color: Mycolor.electricGreen,fontSize: 16,fontWeight: FontWeight.bold),)
               ],),
 Icon(Icons.info_outline,size: 15,)
             ],
@@ -331,100 +521,132 @@ return Row(
     );
 
   }
-_getFromToTripTile(String from, String to){
-return Material(
-  elevation: 20,
-  color: Mycolor.backgroundColor,
-  shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10.0),
-  ),
+  _getFromToTripTile(String from, String to){
+    return Material(
+      elevation: 20,
+      color: Mycolor.backgroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
 
-  child:   Padding(
-    padding: const EdgeInsets.only(top: 10, bottom: 10),
-    child: Row(
+      child:   Padding(
+        padding: const EdgeInsets.only(top: 10, bottom: 10),
+        child: Row(
 
 
 
-      children: [
+          children: [
 
-        Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: Column(
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Column(
 
-            children: [
+                children: [
 
-              Icon(Icons.circle,color: Mycolor.electricBlue,size: 12,),
+                  Icon(Icons.circle,color: Mycolor.electricBlue,size: 12,),
 
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Icon(Icons.circle,color: Mycolor.h1color.withOpacity(0.2),size: 5,),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(Icons.circle,color: Mycolor.h1color.withOpacity(0.2),size: 5,),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(Icons.circle,color: Mycolor.h1color.withOpacity(0.2),size: 5,),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(Icons.circle,color: Mycolor.h1color.withOpacity(0.2),size: 5,),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(Icons.circle,color: Mycolor.h1color.withOpacity(0.2),size: 5,),
+                  ),
+
+                  Icon(Icons.circle,color: Mycolor.electricBlue,size: 12,),
+
+
+
+                ],
+
+
+
               ),
 
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Icon(Icons.circle,color: Mycolor.h1color.withOpacity(0.2),size: 5,),
+            ),
+            Expanded(
+              child:   Padding(
+
+                padding: const EdgeInsets.only(left: 20),
+
+                child:   Column(
+
+
+
+                  crossAxisAlignment:CrossAxisAlignment.start ,
+
+
+
+                  children: [
+
+
+
+                    _upperTextWid('From'),
+
+
+
+                    _lowerText(from.replaceAll("LatLng", "Location ")),
+
+
+
+                    Padding(
+
+                      padding: const EdgeInsets.only(top: 5,bottom: 5),
+
+                      child: Container(
+
+                        height: 0.5,
+
+
+
+                        width: MediaQuery.of(context).size.width * 0.7,
+
+
+
+                        color: Mycolor.h1color,
+
+
+
+                      ),
+
+                    ),
+
+
+
+                    _upperTextWid('To'),
+
+
+
+                    _lowerText(to.replaceAll("LatLng", "Location "))
+
+
+
+                  ],
+
+
+
+                ),
+
               ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Icon(Icons.circle,color: Mycolor.h1color.withOpacity(0.2),size: 5,),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Icon(Icons.circle,color: Mycolor.h1color.withOpacity(0.2),size: 5,),
-              ),
+            ),
 
-              Icon(Icons.circle,color: Mycolor.electricBlue,size: 12,),
-
-
-
-            ],
-
-
-
-          ),
+          ],
 
         ),
-Padding(
-    padding: const EdgeInsets.only(left: 20),
-    child:   Column(
-
-      crossAxisAlignment:CrossAxisAlignment.start ,
-
-      children: [
-
-        _upperTextWid('From'),
-
-        _lowerText("Centaurus Mall"),
-
- Padding(
-     padding: const EdgeInsets.only(top: 5,bottom: 5),
-     child: Container(
-        height: 0.5,
-
-        width: MediaQuery.of(context).size.width * 0.7,
-
-        color: Mycolor.h1color,
-
       ),
- ),
+    );
 
-        _upperTextWid('To'),
-
-        _lowerText("FAST NUCES Islamabad")
-
-      ],
-
-    ),
-),
-
-      ],
-
-    ),
-  ),
-);
-
-}
-
+  }
 _getDriverDetail(picUrl,name,carnumber, carcolor, carname , rating){
     return Container(
       height: 100,

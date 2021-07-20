@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,6 +22,10 @@ import 'package:provider/provider.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
 class Drawer_MainScreen extends StatefulWidget {
+  final User user;
+  Drawer_MainScreen({
+    @required this.user,
+  });
   @override
   _Drawer_MainScreenState createState() => _Drawer_MainScreenState();
 
@@ -34,7 +39,9 @@ class _Drawer_MainScreenState extends State<Drawer_MainScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    screenwid =  Maps(() {
+    screenwid =  Maps(
+      widget.user,
+            () {
       _drawerKey.currentState.openDrawer();
     });
 

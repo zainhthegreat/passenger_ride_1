@@ -14,7 +14,7 @@ part 'UserModal.g.dart';
 class UserModal with ChangeNotifier{
 
 
-String userId ;
+String passengerId ;
 String firstName  ;
 String lastName  ;
 String email  ;
@@ -24,7 +24,7 @@ String homeAddress ;
 
 
 UserModal({
- @required this.userId,
+ @required this.passengerId,
  @required this.email,
  @required this.lastName,
  @required this.firstName,
@@ -32,7 +32,7 @@ UserModal({
  @required this.photoUri
 });
 
-factory UserModal.fromJson(Map<String, dynamic> json) => _$UserModalFromJson(json);
+factory UserModal. fromJson(Map<String, dynamic> json) => _$UserModalFromJson(json);
 Map<String, dynamic> toJson() => _$UserModalToJson(this);
 
 

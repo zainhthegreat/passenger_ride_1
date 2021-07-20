@@ -52,7 +52,6 @@ class _SelectCar_2State extends State<SelectCar_2> {
               child: Stack(
                 children: [
                   GoogleMap(
-                     zoomControlsEnabled: false,
 
                     mapType: MapType.normal,
                     initialCameraPosition: _kGooglePlex,

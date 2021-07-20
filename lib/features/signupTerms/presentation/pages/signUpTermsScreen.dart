@@ -11,6 +11,10 @@ import 'dart:async';
 import 'package:passenger/features/signup-profile/presentation/pages/siginUpProfileScreen.dart';
 
 class SiginUpTerms extends StatefulWidget {
+  final uid;
+
+  SiginUpTerms(this.uid);
+
   @override
   _SiginUpState createState() => _SiginUpState();
 }
@@ -65,7 +69,7 @@ class _SiginUpState extends State<SiginUpTerms> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Sigup_Profile( ),
+                            builder: (context) => Sigup_Profile( widget.uid),
                           ));
 
                     }),

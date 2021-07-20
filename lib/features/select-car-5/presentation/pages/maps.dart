@@ -52,7 +52,7 @@ class _MapsState extends State<Maps> {
               child: Stack(
                 children: [
                   GoogleMap(
-                     zoomControlsEnabled: false,
+
 
                     mapType: MapType.normal,
                     initialCameraPosition: _kGooglePlex,

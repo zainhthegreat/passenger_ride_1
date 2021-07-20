@@ -100,7 +100,7 @@ Container(height: 5,),
 
                     _CurvedBigBlueButton('Accept',(){
 
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Select_your_car(),));
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => Select_your_car(),));
 
                     }),
 

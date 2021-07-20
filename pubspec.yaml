@@ -20,10 +20,23 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
-dependencies:
 
-#  Firebase
+dependencies:
+#  Http request
+  http: ^0.12.0+4
+#  dio: ^3.0.10
+
+
+
+  #  Firebase
+  firebase_core: ^1.0.1
   firebase_auth: ^1.0.1
+
+  firebase_messaging: ^9.0.0
+
+  # AUTH
+
+  google_sign_in: ^5.0.0
 
 
   # maps
@@ -38,10 +51,11 @@ dependencies:
   flutter_credit_card: 0.1.4
   flutter_otp: ^0.3.2
   otp_text_field: ^1.1.0
+  rflutter_alert: ^2.0.2
 
   # font & color
   hexcolor: ^1.0.6
-  google_fonts: ^2.0.0
+  google_fonts: ^1.1.2
 
 
   #file choosing lib
@@ -55,6 +69,12 @@ dependencies:
   expandable_bottom_sheet: ^0.2.1+1
   #maps
   google_maps: ">=3.0.0 <4.0.0"
+  flutter_google_places: ^0.2.8
+  search_map_place: ^0.3.0
+  geocoder: ^0.2.1
+  flutter_polyline_points: ^0.2.1
+  geolocator: ^7.0.1
+
 
   #otp
   pin_code_fields: ^6.0.2
@@ -72,6 +92,7 @@ dependencies:
 
 
   json_annotation: 3.1.1
+  stripe_payment: ^1.1.3
 
 
 
@@ -80,6 +101,12 @@ dev_dependencies:
   json_serializable: 3.5.1
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+#  http: ^0.11.3+7
+  google_maps_flutter: ^0.5.13
+  http_parser: ^4.0.0
+  http: ^0.13.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

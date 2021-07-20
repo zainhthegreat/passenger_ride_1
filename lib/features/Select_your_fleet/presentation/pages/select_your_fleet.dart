@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/features/Select_your_car/presentation/pages/select-your-car.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
@@ -48,7 +49,8 @@ import 'package:passenger/features/signup/presentation/pages/signUpScreen.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:passenger/features/Add_payment/presentation/pages/add_payment.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
-
+import 'package:passenger/core/modals/FleetRequestModal.dart';
+import 'package:passenger/core/modals/AvailableServicesRequestModal.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,13 +62,47 @@ import 'package:passenger/general/variables.dart';
 import 'package:regexpattern/regexpattern.dart';
 import 'dart:async';
 import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
+// import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
+import 'package:passenger/features/passenger-profile/presentation/pages/PassengerProfileScreen.dart';
+import 'package:passenger/general/CommonWidgets.dart';
+import 'package:passenger/general/strings.dart';
+import 'package:passenger/general/variables.dart';
+import 'package:regexpattern/regexpattern.dart';
+import 'dart:async';
+import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:passenger/core/services/BookingRoutine/BookingRoutine.dart';
+import 'package:search_map_place/search_map_place.dart';
+
+// Your api key storage.
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:passenger/features/select-car-1/presentation/pages/select_car_1.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
 import 'package:passenger/general/BottomWidgets.dart';
   class Select_your_fleet extends StatefulWidget {
+
+    Select_your_fleet({
+      @required this.destinationLocation,
+      @required this.sourceLocation,
+      @required this.user,
+
+    });
+    LatLng sourceLocation;
+    LatLng destinationLocation;
+    User user;
   @override
   _Select_your_fleetState createState() => _Select_your_fleetState();
 }
@@ -78,6 +114,7 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
   TextEditingController phnctrl =   TextEditingController();
   bool isCorrectNumber = false;
   CountryCode Country_code =CountryCode();
+
 
   Completer<GoogleMapController> _controller = Completer();
 
@@ -104,6 +141,11 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
 
   @override
   Widget build(BuildContext context) {
+    BookingRoutine bookingRoutine = BookingRoutine(context: context,user: widget.user);
+    bookingRoutine.setBookinglocation(widget.sourceLocation, widget.destinationLocation);
+
+
+
     return SafeArea(
         child: Scaffold(
       backgroundColor:Mycolor.electricGreen,
@@ -116,7 +158,6 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GoogleMap(
-              zoomControlsEnabled: false,
 
               mapType: MapType.normal,
               initialCameraPosition: _kGooglePlex,
@@ -135,7 +176,8 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
                 child: Column(
                   mainAxisAlignment:MainAxisAlignment.spaceBetween ,
                   children: [
-                    _getFromToTripTile('Centaurus Mall','FAST NUCES Islamabad'),
+
+                    _getFromToTripTile(bookingRoutine.getBookingLocatiion().startLocation.toString(),bookingRoutine.getBookingLocatiion().endLocation.toString()),
 
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -149,55 +191,73 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
                           color: Colors.white,
                           child: Column(
                             children: [
-                              Row(
-                                mainAxisAlignment:MainAxisAlignment.spaceBetween ,
-                                children: [
-                                  Container(width: 1,),
+                              FutureBuilder(
+future:bookingRoutine.getFleetListfromLocal(),
+                                builder: (context, snapshot) {
+                                  if(snapshot.hasData){
 
-                                  Text('10 Available',style: GoogleFonts.poppins(color: Mycolor.h1color
-                                      ,fontSize: 16,fontWeight: FontWeight.bold),),
-                                  Container(width: 5,),
-
-                                  Container(
-                                    height: 30,
-                                    width: 70,
-                                    padding: EdgeInsets.only(top: 5   ),
-                                    child: FlatButton(
-                                        padding: EdgeInsets.only(right: 5,left: 5),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(0.0),
-                                            side: BorderSide(color:Colors.black45,width: 3)
-                                        ),
-
-                                        onPressed: (){},
-                                        child: Row(
-                                          crossAxisAlignment:CrossAxisAlignment.center,
+                                    List<FleetRequestModal> fleetList = snapshot.data;
+                                    return Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:MainAxisAlignment.spaceBetween ,
                                           children: [
-                                            Icon(Icons.filter_alt_outlined,size: 20,color:  Mycolor.h1color.withOpacity(0.5),),
-                                            Text('Filter',style: GoogleFonts.poppins(color: Mycolor.h1color.withOpacity(0.5)
-                                                ,fontSize: 12,fontWeight: FontWeight.bold),),
+                                            Container(width: 1,),
+
+                                            Text('${fleetList.length} Available',style: GoogleFonts.poppins(color: Mycolor.h1color
+                                                ,fontSize: 16,fontWeight: FontWeight.bold),),
+                                            Container(width: 5,),
+
+                                            Container(
+                                              height: 30,
+                                              width: 70,
+                                              padding: EdgeInsets.only(top: 5   ),
+                                              child: FlatButton(
+                                                  padding: EdgeInsets.only(right: 5,left: 5),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(0.0),
+                                                      side: BorderSide(color:Colors.black45,width: 3)
+                                                  ),
+
+                                                  onPressed: (){},
+                                                  child: Row(
+                                                    crossAxisAlignment:CrossAxisAlignment.center,
+                                                    children: [
+                                                      Icon(Icons.filter_alt_outlined,size: 20,color:  Mycolor.h1color.withOpacity(0.5),),
+                                                      Text('Filter',style: GoogleFonts.poppins(color: Mycolor.h1color.withOpacity(0.5)
+                                                          ,fontSize: 12,fontWeight: FontWeight.bold),),
+
+                                                    ],
+                                                  )),
+                                            ),
+                                            Container(width: 1,),
 
                                           ],
-                                        )),
-                                  ),
-                                  Container(width: 1,),
+                                        ),
+                                        Container(
+                                          height: 200,
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: fleetList.length,
+                                            itemBuilder: (context, index) =>FlatButton(
+                                              child: _fleetIcon(fleetList[index].name,fleetList[index].minFare,fleetList[index].arrivalTime,'assets/ui/vehicles/uber.png'),
+                                              onPressed: (){
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => Select_your_car(bookingRoutine: bookingRoutine,fleetRequestModal: fleetList[index]),));
 
-                                ],
+                                              },
+                                              splashColor: Colors.blue,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+
+                                  }
+
+                                  return Text("Loading");
+                                }
                               ),
-                              Container(
-                                height: 200,
-                                child: ListView(
-                                   shrinkWrap: true,
-                                  children: [
-                                    _fleetIcon('Uber','100',DateTime.now(),'assets/ui/vehicles/uber.png'),
 
-                                    _fleetIcon('Careem','100',DateTime.now(),'assets/ui/vehicles/careem.png'),
-                                    _fleetIcon('Lyft','100',DateTime.now(),'assets/ui/vehicles/lyft.png'),
-                                    _fleetIcon('Swvl','100',DateTime.now(),'assets/ui/vehicles/swvl.png'),
-
-                                  ],
-                                ),
-                              ),
 
                               Container(color: Mycolor.h1color.withOpacity(0.5),height: 1,width: MediaQuery.of(context).size.width * 0.8,),
                               Row(
@@ -234,16 +294,16 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
                         ),
 
 
-                        _CurvedBigBlueButton('Lets Go',(){
-                          context.read<JourneyProvider>().finidngCar();
-
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context, true );
-
-
-                        }),
+                        // _CurvedBigBlueButton('Lets Go',(){
+                        //   context.read<JourneyProvider>().finidngCar();
+                        //
+                        //   Navigator.pop(context);
+                        //   Navigator.pop(context);
+                        //   Navigator.pop(context);
+                        //   Navigator.pop(context, true );
+                        //
+                        //
+                        // }),
 
 
 
@@ -260,7 +320,9 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
       ),
     ));
   }
-  _fleetIcon(vehicle,price,DateTime dt,img){
+  _fleetIcon(vehicle,price, dt,img){
+    DateTime localdt = DateTime.now();
+
 
     return Padding(
       padding: const EdgeInsets.all(4.0),
@@ -278,7 +340,7 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
                   ,fontSize: 16,fontWeight: FontWeight.bold),),
               Row(children: [Icon(Icons.access_time,size: 15,),
               Container(width: 2,),
-              Text(DateFormat('h:mm a').format(dt),style:  GoogleFonts.poppins(color: Mycolor.h1color,fontSize: 16,fontWeight: FontWeight.bold),)
+              Text(DateFormat('h:mm a').format(localdt),style:  GoogleFonts.poppins(color: Mycolor.h1color,fontSize: 16,fontWeight: FontWeight.bold),)
               ],)
             ],
           ),
@@ -290,7 +352,7 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
                 Image.asset('assets/ui/vehicles/denominnation.png',height: 12,),
                 Container(width: 5,),
 
-                Text(price+' PKR',style: GoogleFonts.poppins(color: Mycolor.electricGreen,fontSize: 16,fontWeight: FontWeight.bold),)
+                Text('${price} PKR',style: GoogleFonts.poppins(color: Mycolor.electricGreen,fontSize: 16,fontWeight: FontWeight.bold),)
               ],),
 Icon(Icons.info_outline,size: 15,)
             ],
@@ -443,37 +505,70 @@ return Material(
           ),
 
         ),
-Padding(
-    padding: const EdgeInsets.only(left: 20),
-    child:   Column(
+Expanded(
+  child:   Padding(
 
-      crossAxisAlignment:CrossAxisAlignment.start ,
+      padding: const EdgeInsets.only(left: 20),
 
-      children: [
+      child:   Column(
 
-        _upperTextWid('From'),
 
-        _lowerText("Centaurus Mall"),
 
- Padding(
-     padding: const EdgeInsets.only(top: 5,bottom: 5),
-     child: Container(
-        height: 0.5,
+        crossAxisAlignment:CrossAxisAlignment.start ,
 
-        width: MediaQuery.of(context).size.width * 0.7,
 
-        color: Mycolor.h1color,
+
+        children: [
+
+
+
+          _upperTextWid('From'),
+
+
+
+          _lowerText(from.replaceAll("LatLng", "Location ")),
+
+
+
+   Padding(
+
+       padding: const EdgeInsets.only(top: 5,bottom: 5),
+
+       child: Container(
+
+          height: 0.5,
+
+
+
+          width: MediaQuery.of(context).size.width * 0.7,
+
+
+
+          color: Mycolor.h1color,
+
+
+
+        ),
+
+   ),
+
+
+
+          _upperTextWid('To'),
+
+
+
+          _lowerText(to.replaceAll("LatLng", "Location "))
+
+
+
+        ],
+
+
 
       ),
- ),
 
-        _upperTextWid('To'),
-
-        _lowerText("FAST NUCES Islamabad")
-
-      ],
-
-    ),
+  ),
 ),
 
       ],

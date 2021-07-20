@@ -10,6 +10,7 @@ import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen
 import 'package:passenger/features/sigin/presentation/pages/siginInScreen.dart';
 import 'package:passenger/features/signup/presentation/pages/signUpScreen.dart';
 import 'features/Drawer/presentation/pages/DrawerMaster.dart';
+import 'features/TEMP_FEATURES/TempFeatures.dart';
 import 'features/your-trips/presentation/pages/your-trips.dart  ';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,6 @@ import 'package:passenger/features/tripdetails/presentation/pages/trip-details.d
 import 'package:passenger/features/signup-profile/presentation/pages/siginUpProfileScreen.dart';
 import 'package:passenger/features/passenger-profile/presentation/pages/PassengerProfileScreen.dart';
 import 'package:passenger/features/Select_Destination/presentation/pages/select-destination.dart';
-
 import 'package:passenger/features/Select_your_car/presentation/pages/select-your-car.dart';
 import 'package:passenger/features/Help/presentation/pages/Help.dart';
 import 'package:passenger/features/Reciept-details/presentation/pages/reciept-details.dart';
@@ -47,16 +47,15 @@ import 'package:passenger/features/School_run_three/presentation/pages/School_ru
 import 'package:passenger/features/Business_Payment/presentation/pages/Business_Payment.dart';
 import 'package:passenger/features/maps/presentation/pages/maps.dart';
 import 'package:passenger/features/welcome/presentation/pages/welcomeScreen.dart';
-
 import 'package:provider/provider.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
-
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  // runApp(MyApp());
   runApp(MyApp());
 }
 
@@ -64,28 +63,23 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-    return MultiProvider(providers: [
-      ChangeNotifierProvider<JourneyProvider>(
-        create: (_) => JourneyProvider(),
-      ),
-      ChangeNotifierProvider<CreateUserRequestModal>(
-        create: (_) => CreateUserRequestModal(),
-      ),
-      ChangeNotifierProvider<UserModal>(
-        create: (_) => UserModal(),
-      ),
-      // CreateUserRequestModal
-      // UserModal
-
-    ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<JourneyProvider>(
+          create: (_) => JourneyProvider(),
+        ),
+        ChangeNotifierProvider<CreateUserRequestModal>(
+          create: (_) => CreateUserRequestModal(),
+        ),
+        ChangeNotifierProvider<UserModal>(
+          create: (_) => UserModal(),
+        ),
+        // CreateUserRequestModal
+        // UserModal
+      ],
       child: MaterialApp(
-        home: SiginUp/*SiginUpScreen*/(),
-      ) ,
+        home: SiginUp /*SiginUpScreen*/ (),
+      ),
     );
-
-
-
   }
 }
-

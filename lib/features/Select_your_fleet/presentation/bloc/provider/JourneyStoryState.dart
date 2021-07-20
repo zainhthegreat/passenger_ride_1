@@ -16,7 +16,7 @@ enum JournyStoryState {
 
 }
 class JourneyProvider with ChangeNotifier, DiagnosticableTreeMixin {
-  int _journeyState = 2;
+  int _journeyState = 0;
 
   int get count => _journeyState;
 

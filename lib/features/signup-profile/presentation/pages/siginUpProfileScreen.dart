@@ -2,6 +2,10 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/core/enums/signinMethod.dart';
+import 'package:passenger/core/modals/CreateUserRequestModal.dart';
+import 'package:passenger/core/modals/UserModal.dart';
+import 'package:passenger/core/services/Auth/AuthRoutine.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
@@ -17,6 +21,8 @@ import 'dart:io';
 import 'package:passenger/features/Drawer/presentation/pages/DrawerMaster.dart';
 class Sigup_Profile extends StatefulWidget {
 
+  final uid;
+  Sigup_Profile(this.uid);
   @override
   _SiginState createState() => _SiginState();
 }
@@ -31,6 +37,12 @@ class _SiginState extends State<Sigup_Profile> {
   final _formKey = GlobalKey<FormState>();
   //image choohoosing
 
+  final TextEditingController textCtrlFname =TextEditingController(text: 'zaid');
+  final TextEditingController textCtrlLname =TextEditingController(text: 'saeed');
+  final TextEditingController textCtrlEmail =TextEditingController(text: 'zaid@g.com');
+  final TextEditingController textCtrladdress =TextEditingController(text: 'street 7 house 8 ');
+  final TextEditingController textCtrlpassword =TextEditingController(text: '123456');
+  final TextEditingController textCtrlConfirmpassword =TextEditingController(text: '123456');
 
   File _image;
   final picker = ImagePicker();
@@ -81,6 +93,7 @@ class _SiginState extends State<Sigup_Profile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     TextFormField(
+                      controller: textCtrlFname,
                       decoration: new InputDecoration(
                         hintText: "First name",
                       ),
@@ -92,6 +105,7 @@ class _SiginState extends State<Sigup_Profile> {
                       },
                     ),
                     TextFormField(
+                      controller: textCtrlLname,
                       decoration: new InputDecoration(
                         hintText: "Last name",
                       ),
@@ -103,6 +117,7 @@ class _SiginState extends State<Sigup_Profile> {
                       },
                     ),
                     TextFormField(
+                       controller: textCtrlEmail,
                       decoration: new InputDecoration(
                         hintText: "Email",
                       ),
@@ -114,6 +129,7 @@ class _SiginState extends State<Sigup_Profile> {
                       },
                     ),
                     TextFormField(
+controller: textCtrladdress,
                       decoration: new InputDecoration(
                         hintText: "Home address",
                       ),
@@ -125,6 +141,7 @@ class _SiginState extends State<Sigup_Profile> {
                       },
                     ),
                     TextFormField(
+                      controller: textCtrlpassword,
                       decoration: new InputDecoration(
                           hintText: "Password",
                           suffixIcon:_getPassLeading()
@@ -135,18 +152,48 @@ class _SiginState extends State<Sigup_Profile> {
                         }
                         return null;
                       },
+
                     ),
+                    TextFormField(
+
+                        controller: textCtrlConfirmpassword,
+                      decoration: new InputDecoration(
+                          hintText: "Confirm Password",
+                          suffixIcon:_getPassLeading()
+                      ),
+                      validator: (value) {
+
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+
+                    ),
+
                     _BigBlueButton('Create Account',(){
                       // Validate returns true if the form is valid, or false
                       // otherwise.
-Navigator.push(context, MaterialPageRoute(builder: (context) => Drawer_MainScreen(),));
-                      // if (_formKey.currentState.validate()) {
-                      //   // If the form is valid, display a Snackbar.
-                      //   Scaffold.of(context)
-                      //       .showSnackBar(SnackBar(content: Text('Processing Data')));
-                      //
-                      // }
 
+                      if (_formKey.currentState.validate()) {
+                        final authRoutine = AuthRoutine();
+                        authRoutine.resgister_user(CreateUserRequestModal(
+                          loginMethod:LoginMethod.GOOGLE ,
+
+                            password: textCtrladdress.text,user: UserModal(
+                          photoUri: '',
+                          passengerId: widget.uid,email: textCtrlEmail.text,firstName: textCtrlFname.text,homeAddress: textCtrladdress.text,lastName: textCtrlLname.text,
+
+                        )) ).then((value) {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+
+                        });
+                        // If the form is valid, display a Snackbar.
+                        // Scaffold.of(context)
+                        //     .showSnackBar(SnackBar(content: Text('Processing Data')));
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => Drawer_MainScreen(),));
+                      }
                     }),
                   ],
                 ),

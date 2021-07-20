@@ -1,9 +1,12 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:passenger/core/modals/CreateUserRequestModal.dart';
+import 'package:passenger/core/services/Auth/AuthRoutine.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
@@ -14,12 +17,11 @@ import 'dart:async';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class Sigin_otp extends StatefulWidget {
-  String phoneNumber = '';
-  Sigin_otp(this.phoneNumber);
+  String verificationId = '';
+  Sigin_otp(this.verificationId);
   @override
   _SiginState createState() => _SiginState();
 }
-
 
 // counter tutorial link
 //https://stackoverflow.com/questions/54610121/flutter-countdown-timer
@@ -31,9 +33,8 @@ class _SiginState extends State<Sigin_otp> {
 
   //counter timer varaibles
   Timer _timer;
-  int _start = 10;
+  int _start = 30;
   String currentText;
-
 
   @override
   void initState() {
@@ -41,21 +42,15 @@ class _SiginState extends State<Sigin_otp> {
     super.initState();
     otpctrl.addListener(() {
       setState(() {
-        isCorrectNumber = (otpctrl
-            .text.length >
-            9)
-            ? true
-            : false;
+        isCorrectNumber = (otpctrl.text.isNumeric() /*> 9*/) ? true : false;
       });
     });
 
     print("initState");
     WidgetsBinding.instance.addPostFrameCallback((_) {
-startTimer();
+      startTimer();
     });
-
   }
-
 
   @override
   void dispose() {
@@ -81,85 +76,50 @@ startTimer();
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Common_Widgets_Class.getMasterHeadingWithUpperSubHeadingLowerSubHeadingWithBlue('Enter your OTP code','Phone Verification','Enter the 4-digit code sent to you at ${widget.phoneNumber}',' did you enter the correct number?'),
+                  Common_Widgets_Class
+                      .getMasterHeadingWithUpperSubHeadingLowerSubHeadingWithBlue(
+                          'Enter your OTP code',
+                          'Phone Verification',
+                          'Enter the 4-digit code sent to you at ${widget.verificationId}',
+                          ' did you enter the correct number?'),
                   // _getPasswordField(false, otpctrl),
-                  Container(height: 15,),
-                PinCodeTextField(
-
-                  appContext: context,
-                  pastedTextStyle: TextStyle(
-                    color: Mycolor.h1color,
-                    fontWeight: FontWeight.bold,
+                  Container(
+                    height: 15,
                   ),
 
-                  length: 4,
-                  obscureText: false,
-                  obscuringCharacter: '*',
-                  animationType: AnimationType.fade,
-                  validator: (v) {
-                    if (v.length < 3) {
-                      return "Please Enter OTP";
-                    } else {
-                      return null;
-                    }
-                  },
-                  pinTheme: PinTheme(
-
-                    shape: PinCodeFieldShape.box,
-                    borderRadius: BorderRadius.circular(5),
-                    fieldHeight: 50,
-                    fieldWidth: 40,
-
-                    activeFillColor:
-                   /* hasError ? Colors.orange : */Colors.grey,
-                    activeColor: Colors.grey,
-                    disabledColor: Colors.grey,
-
-                    inactiveColor: Colors.grey,
-                    inactiveFillColor: Colors.grey,
-                    selectedColor: Colors.grey,
-                    selectedFillColor: Colors.grey,
-                  ),
-                  cursorColor: Colors.black,
-                  animationDuration: Duration(milliseconds: 300),
-                  textStyle: TextStyle(fontSize: 20, height: 1.6),
-                  backgroundColor: Mycolor.backgroundColor,
-                  enableActiveFill: true,
-                  // errorAnimationController: errorController,
-                  controller: otpctrl,
-                  keyboardType: TextInputType.number,
-                  boxShadows: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      color: Colors.black12,
-                      blurRadius: 10,
-                    )
-                  ],
-                  onCompleted: (v) {
-                    print("Completed");
-                  },
-                  // onTap: () {
-                  //   print("Pressed");
-                  // },
-                  onChanged: (value) {
-                    print(value);
-                    setState(() {
-                      currentText = value;
-                    });
-                  },
-                  beforeTextPaste: (text) {
-                    print("Allowing to paste $text");
-                    //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                    //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                    return true;
-                  },
-                ),
-
+                  _getOTPWidget(),
                   //
                   // _buttonText('Forgot password?', () {}),
 
-                  _CircleIconButton('Resend Code in ',_start.toString()+' seconds', () {
-Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),));
+                  _CircleIconButton(
+                      'Resending in ', _start.toString() + ' seconds',
+                      () async {
+                    FirebaseAuth auth = FirebaseAuth.instance;
+                    PhoneAuthCredential phoneAuthCredential =
+                        PhoneAuthProvider.credential(
+                            verificationId: widget.verificationId,
+                            smsCode: otpctrl.value.text);
+
+                    try {
+                      await auth.signInWithCredential(phoneAuthCredential);
+                      print("LOGGED IN");
+                      print(auth.currentUser.uid);
+                      final authRoutine = AuthRoutine();
+                      authRoutine.InititeRoutine(user: auth.currentUser);
+
+                      print(auth.currentUser.phoneNumber);
+
+                      // await setUserDetails(auth.currentUser.uid,phone: auth.currentUser.phoneNumber);
+
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return SiginUpTerms(auth.currentUser.uid);
+                      }));
+                    } catch (e) {
+                      print(e);
+                    }
+
+// Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),));
                     // Sigin_In
                   }),
 
@@ -173,21 +133,71 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),)
     ));
   }
 
-  _getOTPWidget(){
-    return OTPTextField(
-      length: 5,
-      width: MediaQuery.of(context).size.width,
-      textFieldAlignment: MainAxisAlignment.spaceAround,
-      fieldWidth: 50,
-      fieldStyle: FieldStyle.underline,
-      style: TextStyle(
-          fontSize: 17
+  _getOTPWidget() {
+    return PinCodeTextField(
+      appContext: context,
+      pastedTextStyle: TextStyle(
+        color: Mycolor.h1color,
+        fontWeight: FontWeight.bold,
       ),
-      onChanged: (pin) {
-        print("Changed: " + pin);
+
+      length: 6,
+      obscureText: false,
+      obscuringCharacter: '*',
+      animationType: AnimationType.fade,
+      validator: (v) {
+        if (v.length < 6) {
+          return "Please Enter OTP";
+        } else {
+          return null;
+        }
       },
-      onCompleted: (pin) {
-        print("Completed: " + pin);
+      pinTheme: PinTheme(
+        shape: PinCodeFieldShape.box,
+        borderRadius: BorderRadius.circular(5),
+        fieldHeight: 50,
+        fieldWidth: 40,
+        activeFillColor:
+            /* hasError ? Colors.orange : */ Colors.grey,
+        activeColor: Colors.grey,
+        disabledColor: Colors.grey,
+        inactiveColor: Colors.grey,
+        inactiveFillColor: Colors.grey,
+        selectedColor: Colors.grey,
+        selectedFillColor: Colors.grey,
+      ),
+      cursorColor: Colors.black,
+      animationDuration: Duration(milliseconds: 300),
+      textStyle: TextStyle(fontSize: 20, height: 1.6),
+      backgroundColor: Mycolor.backgroundColor,
+      enableActiveFill: true,
+      // errorAnimationController: errorController,
+      controller: otpctrl,
+      keyboardType: TextInputType.number,
+      boxShadows: [
+        BoxShadow(
+          offset: Offset(0, 1),
+          color: Colors.black12,
+          blurRadius: 10,
+        )
+      ],
+      onCompleted: (v) {
+        print("Completed");
+      },
+      // onTap: () {
+      //   print("Pressed");
+      // },
+      onChanged: (value) {
+        print(value);
+        setState(() {
+          currentText = value;
+        });
+      },
+      beforeTextPaste: (text) {
+        print("Allowing to paste $text");
+        //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+        //but you can show anything you want here, like your pop up saying wrong paste format or etc
+        return true;
       },
     );
   }
@@ -276,34 +286,39 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),)
                     height: 0,
                     width: 0,
                   ),
-
           )),
     );
   }
 
-  _CircleIconButton(String str,String timer, Function fun) {
+  _CircleIconButton(String str, String timer, Function fun) {
     return Row(
-      mainAxisAlignment:MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         RichText(
           text: TextSpan(
-
             children: <TextSpan>[
-              TextSpan(text:str, style:GoogleFonts.poppins(color: Mycolor.h1color,fontSize: 14,fontWeight: FontWeight.normal)),
-              TextSpan(text: timer, style:GoogleFonts.poppins(color: Mycolor.electricBlue,fontSize: 14,fontWeight: FontWeight.bold)),
-
+              TextSpan(
+                  text: str,
+                  style: GoogleFonts.poppins(
+                      color: Mycolor.h1color,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal)),
+              TextSpan(
+                  text: timer,
+                  style: GoogleFonts.poppins(
+                      color: Mycolor.electricBlue,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold)),
             ],
           ),
-        ) ,
+        ),
         RaisedButton(
           padding: const EdgeInsets.all(10),
-
-
           elevation: 5,
-          onPressed:fun,
+          onPressed: fun,
           child: new Icon(
             Icons.arrow_forward,
-            color:Mycolor.h1color,
+            color: Mycolor.h1color,
             size: 20.0,
           ),
           shape: new CircleBorder(),
@@ -311,7 +326,6 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),)
         ),
       ],
     );
-
   }
 
   _buttonText(str, fun) {
@@ -329,12 +343,11 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),)
     );
   }
 
-
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
-          (Timer timer) {
+      (Timer timer) {
         if (_start == 0) {
           setState(() {
             timer.cancel();
