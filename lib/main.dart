@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +12,7 @@ import 'package:passenger/features/sigin/presentation/pages/siginInScreen.dart';
 import 'package:passenger/features/signup/presentation/pages/signUpScreen.dart';
 import 'features/Drawer/presentation/pages/DrawerMaster.dart';
 import 'features/TEMP_FEATURES/TempFeatures.dart';
-import 'features/your-trips/presentation/pages/your-trips.dart  ';
+import 'features/your-trips/presentation/pages/your-trips.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,8 +50,12 @@ import 'package:passenger/features/maps/presentation/pages/maps.dart';
 import 'package:passenger/features/welcome/presentation/pages/welcomeScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
-import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
+//import 'package:passenger/features/Select_your_fleet/presenatation/pages/select_your_fleet.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+
+
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,7 +83,22 @@ class MyApp extends StatelessWidget {
         // UserModal
       ],
       child: MaterialApp(
-        home: SiginUp /*SiginUpScreen*/ (),
+        home: FutureBuilder(
+          future: FirebaseFirestore.instance.collection('services').add({
+            'arrivalTime':
+            3,
+            'serviceFare':
+            500,
+            'serviceIcon':
+            "https://firebasestorage.googleapis.com/v0/b/ride-app-f7742.appspot.com/o/prototype%2Fservice%2FSuzuki_Mehran_2012.jpeg?alt=media&token=b71a5bb6-dcb3-42a3-8536-fc370c5167ae",
+            'serviceId':"",
+            'serviceName':
+            "mehran boom"
+          }),
+          builder: (context, snapshot) {
+            return SiginUp /*SiginUpScreen*/ ();
+          }
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/features/Findinng_Match/presentation/pages/finding_match.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
@@ -110,7 +111,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geocoder/geocoder.dart';
+// import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 // import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -210,8 +211,8 @@ class _Select_your_carState extends State<Select_your_car> {
             ),
             Common_Widgets_Class.TopbarWhiteBase(context,(){
               Navigator.pop(context);
-            },'Select Your Car'
-                '','https://upload.wikimedia.org/wikipedia/commons/0/05/Alexander_Hamilton_portrait_by_John_Trumbull_1806.jpg'),
+            },'Select Your Service'
+                '',widget.bookingRoutine.user.photoURL),
 
             Positioned(
               child: Padding(
@@ -237,7 +238,7 @@ class _Select_your_carState extends State<Select_your_car> {
                               Row(
                                 mainAxisAlignment:MainAxisAlignment.spaceAround ,
                                 children: [
-                                  Text('Select your fleet',style: GoogleFonts.poppins(color: Mycolor.h1color.withOpacity(0.5)
+                                  Text('Select your Service',style: GoogleFonts.poppins(color: Mycolor.h1color.withOpacity(0.5)
                                       ,fontSize: 16,fontWeight: FontWeight.bold),),
                                   Icon(Icons.keyboard_arrow_down_rounded,size: 25,color:  Mycolor.h1color.withOpacity(0.5),)
                                 ],
@@ -310,10 +311,19 @@ class _Select_your_carState extends State<Select_your_car> {
                                              ],
                                            ).show();
                                            print("BOOKING ADDED SUCCESSFUL");
+
+
+
+                                           Navigator.pop(context);
+                                           Navigator.pop(context);
+                                           Navigator.pop(context);
+                                           Navigator.pop(context);
+                                           Navigator.push(context, MaterialPageRoute(builder:  (context) =>FindingMatch() ));
+
                                          }
 
                                         },
-                                        child: _fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].serviceFare,availableServicesRequestModal[index].arrivalTime,'assets/ui/vehicles/pro.png'),
+                                        child: _fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].serviceFare,availableServicesRequestModal[index].arrivalTime,availableServicesRequestModal[index].serviceIcon),
                                       ),
                                     );
 
@@ -394,7 +404,7 @@ class _Select_your_carState extends State<Select_your_car> {
         mainAxisAlignment:MainAxisAlignment.spaceAround ,
 
         children: [
-          Image.asset(img, width: 70,),
+          Image.network(img, width: 70,),
           Container(width: 10,),
           Expanded(
             child: Column(

@@ -10,7 +10,9 @@ enum JournyStoryState {
   Arriving,
   Arrived,
   Reaching,
-  RateDriver
+  RateDriver,
+
+  FindingMatch
 
 
 
@@ -68,6 +70,11 @@ class JourneyProvider with ChangeNotifier, DiagnosticableTreeMixin {
   void RateDriver() {
     _journeyState=JournyStoryState.RateDriver.index;
     notifyListeners();
+  }
+  void matching(){
+    _journeyState=JournyStoryState.FindingMatch.index;
+    notifyListeners();
+
   }
 
   @override

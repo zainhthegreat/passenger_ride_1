@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geocoder/geocoder.dart';
+// import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 // import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +15,7 @@ import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
 import 'package:regexpattern/regexpattern.dart';
 import 'dart:async';
-import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
+// import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -65,6 +65,7 @@ class _Select_car_1State extends State<Select_car_1> {
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
+  String Select_Pickup='Select Pickup';
 
   static final CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
@@ -197,7 +198,7 @@ class _Select_car_1State extends State<Select_car_1> {
                     left: 10,
                     right: 5,
                     child: _getFromToTripTile(
-                        'Select Pickup', 'Select Destination'),
+                        Select_Pickup, 'Select_Destination'),
                   ),
                   Positioned(
                     right: 5,
@@ -415,6 +416,12 @@ class _Select_car_1State extends State<Select_car_1> {
         target: LatLng(position.latitude,position.longitude),
         tilt: 59.440717697143555,
         zoom: 30)));
+
+    setState(() {
+
+      Select_Pickup =LatLng(position.latitude,position.longitude).toString()  ;
+
+    });
 
   }
 

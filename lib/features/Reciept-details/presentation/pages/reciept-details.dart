@@ -9,7 +9,7 @@ import 'package:regexpattern/regexpattern.dart';
 import 'dart:async';
 import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:passenger/features/Help/presentation/pages/Help.dart ';
+import 'package:passenger/features/Help/presentation/pages/Help.dart';
 class RecieptDetails extends StatefulWidget {
   @override
   _RecieptDetailsSatate createState() => _RecieptDetailsSatate();

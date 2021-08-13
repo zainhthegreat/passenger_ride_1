@@ -213,7 +213,7 @@ class Common_Widgets_Class {
           Text(
             rating,
             style: GoogleFonts.poppins(
-                color: Mycolor.electricGreen,
+                color: Mycolor.electricBlue,
                 fontSize: 12,
                 fontWeight: FontWeight.bold),
           ),

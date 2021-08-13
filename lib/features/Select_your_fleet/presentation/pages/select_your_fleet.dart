@@ -68,7 +68,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geocoder/geocoder.dart';
+// import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 // import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -84,7 +84,7 @@ import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:passenger/core/services/BookingRoutine/BookingRoutine.dart';
-import 'package:search_map_place/search_map_place.dart';
+// import 'package:search_map_place/search_map_place.dart';
 
 // Your api key storage.
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -118,24 +118,25 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
 
   Completer<GoogleMapController> _controller = Completer();
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+   CameraPosition _kGooglePlex;
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
 
-  @override
-  void initState() => phnctrl.addListener(() {
+ @override
+  void initState() {
+    // TODO: implement initState
+   _kGooglePlex = CameraPosition(
+     target: LatLng(widget.sourceLocation.latitude,widget.sourceLocation.longitude),
+     zoom: 14.4746,
+   );
 
-      setState(() {
-        isCorrectNumber = /*(phnctrl.text.isNumeric() ) &&  */(phnctrl.text.length==9 )?true:false;
-             });
-    });
+   phnctrl.addListener(() {
+
+     setState(() {
+       isCorrectNumber = /*(phnctrl.text.isNumeric() ) &&  */(phnctrl.text.length==9 )?true:false;
+     });
+   });
+
+  }
 
 
 
@@ -168,7 +169,7 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
             Common_Widgets_Class.TopbarWhiteBase(context,(){
               Navigator.pop(context);
             },'Select Your Fleet'
-                '','https://upload.wikimedia.org/wikipedia/commons/0/05/Alexander_Hamilton_portrait_by_John_Trumbull_1806.jpg'),
+                '',widget.user.photoURL),
 
             Positioned(
               child: Padding(
@@ -240,7 +241,7 @@ future:bookingRoutine.getFleetListfromLocal(),
                                             shrinkWrap: true,
                                             itemCount: fleetList.length,
                                             itemBuilder: (context, index) =>FlatButton(
-                                              child: _fleetIcon(fleetList[index].name,fleetList[index].minFare,fleetList[index].arrivalTime,'assets/ui/vehicles/uber.png'),
+                                              child: _fleetIcon(fleetList[index].name,fleetList[index].minFare,fleetList[index].arrivalTime,fleetList[index].icon),
                                               onPressed: (){
                                                 Navigator.push(context, MaterialPageRoute(builder: (context) => Select_your_car(bookingRoutine: bookingRoutine,fleetRequestModal: fleetList[index]),));
 
@@ -330,7 +331,7 @@ future:bookingRoutine.getFleetListfromLocal(),
         mainAxisAlignment:MainAxisAlignment.spaceAround ,
 
         children: [
-          Image.asset(img, width: 50,),
+          Image.network(img, width: 50,),
           Column(
             mainAxisAlignment:MainAxisAlignment.start,
             crossAxisAlignment:CrossAxisAlignment.start ,

@@ -16,6 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0+1
+#  dio: ^3.0.10
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -23,20 +24,27 @@ environment:
 
 dependencies:
 #  Http request
-  http: ^0.12.0+4
-#  dio: ^3.0.10
+#  http: ^0.12.0+4
+#  http: ^0.13.3
 
+  http: ^0.11.3+17
 
 
   #  Firebase
   firebase_core: ^1.0.1
   firebase_auth: ^1.0.1
 
-  firebase_messaging: ^9.0.0
+#  firebase_messaging: ^9.0.0
 
+  firebase_messaging: ^10.0.0
+  cloud_firestore: ^2.4.0
   # AUTH
 
-  google_sign_in: ^5.0.0
+#  google_sign_in: ^5.0.0
+
+
+  google_sign_in: ^5.0.5
+
 
 
   # maps
@@ -56,7 +64,7 @@ dependencies:
   # font & color
   hexcolor: ^1.0.6
   google_fonts: ^1.1.2
-
+  sleek_circular_slider: ^2.0.1
 
   #file choosing lib
 #  image_picker: ^0.6.7+21
@@ -78,6 +86,7 @@ dependencies:
 
   #otp
   pin_code_fields: ^6.0.2
+
 
 
   flutter:
@@ -107,6 +116,8 @@ dependency_overrides:
   google_maps_flutter: ^0.5.13
   http_parser: ^4.0.0
   http: ^0.13.0
+  google_maps_webservice: ^0.0.20-nullsafety.2
+  json_annotation: 4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

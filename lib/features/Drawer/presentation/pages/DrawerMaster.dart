@@ -75,7 +75,7 @@ class _Drawer_MainScreenState extends State<Drawer_MainScreen> {
                     ),
                     Expanded(
                         child: Common_Widgets_Class.getDrawerHeading(
-                            'Ali Ahmed', 'Good morning,', '3.24')),
+                            widget.user.displayName, 'Good morning,', '3.24')),
                   ],
                 ),
                 Container(
@@ -160,7 +160,6 @@ class _Drawer_MainScreenState extends State<Drawer_MainScreen> {
                         fontSize: 16,
                         fontWeight: FontWeight.bold)),
                 onClick: () {}),
-
             MLMenuItem(
                 leading: Image.asset(
                   r'assets/ui/drawerIcon/settingsIcon.png',
