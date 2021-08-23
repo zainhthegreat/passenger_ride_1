@@ -15,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 part 'AvailableServicesRequestModal.g.dart';
 
 @JsonSerializable()
+
 class AvailableServicesRequestModal with ChangeNotifier {
  String serviceId = "string";
  String  serviceName = "string";

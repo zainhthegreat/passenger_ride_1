@@ -96,7 +96,7 @@ class MyApp extends StatelessWidget {
             "mehran boom"
           }),
           builder: (context, snapshot) {
-            return SiginUp /*SiginUpScreen*/ ();
+            return SiginUpScreen /*SiginUpScreen*/ ();
           }
         ),
       ),

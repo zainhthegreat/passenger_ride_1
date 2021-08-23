@@ -127,7 +127,7 @@ import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:passenger/core/services/BookingRoutine/BookingRoutine.dart';
-import 'package:search_map_place/search_map_place.dart';
+// import 'package:search_map_place/search_map_place.dart';
 
 // Your api key storage.
 import 'package:google_maps_flutter/google_maps_flutter.dart';
