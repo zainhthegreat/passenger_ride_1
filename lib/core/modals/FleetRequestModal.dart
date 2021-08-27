@@ -1,16 +1,7 @@
-import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:passenger/core/enums/signinMethod.dart';
-import 'package:passenger/core/modals/UserModal.dart';
-
 import 'package:json_annotation/json_annotation.dart';
-import 'package:passenger/core/services/Auth/AuthRoutine.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 part 'FleetRequestModal.g.dart';
 

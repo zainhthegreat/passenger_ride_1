@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +9,7 @@ import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:passenger/core/modals/CreateUserRequestModal.dart';
 import 'package:passenger/core/services/Auth/AuthRoutine.dart';
+import 'package:passenger/features/sigin/presentation/pages/siginInScreen.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
@@ -16,8 +19,12 @@ import 'package:passenger/features/signupTerms/presentation/pages/signUpTermsScr
 import 'dart:async';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../../../../util.dart';
+
+import 'package:http/http.dart' as http;
+
 class Sigin_otp extends StatefulWidget {
-  String verificationId = '';
+  String verificationId;
   Sigin_otp(this.verificationId);
   @override
   _SiginState createState() => _SiginState();
@@ -33,8 +40,10 @@ class _SiginState extends State<Sigin_otp> {
 
   //counter timer varaibles
   Timer _timer;
-  int _start = 30;
+  int _start = 59;
   String currentText;
+
+  bool userExists;
 
   @override
   void initState() {
@@ -94,6 +103,7 @@ class _SiginState extends State<Sigin_otp> {
                   _CircleIconButton(
                       'Resending in ', _start.toString() + ' seconds',
                       () async {
+
                     FirebaseAuth auth = FirebaseAuth.instance;
                     PhoneAuthCredential phoneAuthCredential =
                         PhoneAuthProvider.credential(
@@ -102,19 +112,47 @@ class _SiginState extends State<Sigin_otp> {
 
                     try {
                       await auth.signInWithCredential(phoneAuthCredential);
-                      print("LOGGED IN");
                       print(auth.currentUser.uid);
                       final authRoutine = AuthRoutine();
                       authRoutine.InititeRoutine(user: auth.currentUser);
 
-                      print(auth.currentUser.phoneNumber);
-
                       // await setUserDetails(auth.currentUser.uid,phone: auth.currentUser.phoneNumber);
 
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return SiginUpTerms(auth.currentUser.uid);
-                      }));
+                      var url = Uri.parse(baseURL +
+                          '/login/does_passenger_exist?passengerId=' +
+                          auth.currentUser.phoneNumber);
+                      http.Response response = await http.get(url);
+
+                      if (response.statusCode == 200) {
+                        userExists = jsonDecode(response.body)['value'];
+
+
+                        if (userExists)
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Sigin(true);
+                          }));
+                        else
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return SiginUpTerms(auth.currentUser.uid);
+                          }));
+                      }
+                      // userExists= await authRoutine.does_user_exist(auth.currentUser.uid,null);
+                      //
+                      //
+                      // if(userExists)
+                      //   Navigator.push(context,
+                      //       MaterialPageRoute(builder: (context) {
+                      //         return Sigin();
+                      //
+                      //       }));
+                      //
+                      // else
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) {
+                      //   return SiginUpTerms(auth.currentUser.uid);
+                      // }));
                     } catch (e) {
                       print(e);
                     }

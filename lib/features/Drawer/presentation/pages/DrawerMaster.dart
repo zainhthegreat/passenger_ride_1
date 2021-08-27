@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/features/Add_payment/presentation/pages/add_payment.dart';
 import 'package:passenger/features/Welcome_school_run/presentation/pages/welcome_school_run.dart';
 import 'package:passenger/features/legal/presentation/pages/legal.dart';
@@ -12,6 +13,7 @@ import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/popUpWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
+import 'package:passenger/util.dart';
 import 'package:regexpattern/regexpattern.dart';
 import 'package:passenger/features/Drawer/presentation/pages/drawer_core.dart';
 import 'package:passenger/features/Welcome_business_run/presentation/pages/welcome_business_run.dart';
@@ -22,7 +24,7 @@ import 'package:provider/provider.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
 class Drawer_MainScreen extends StatefulWidget {
-  final User user;
+  UserModal user;
   Drawer_MainScreen({
     @required this.user,
   });
@@ -39,6 +41,10 @@ class _Drawer_MainScreenState extends State<Drawer_MainScreen> {
   @override
   void initState() {
     // TODO: implement initState
+
+
+
+
     screenwid =  Maps(
       widget.user,
             () {
@@ -75,7 +81,7 @@ class _Drawer_MainScreenState extends State<Drawer_MainScreen> {
                     ),
                     Expanded(
                         child: Common_Widgets_Class.getDrawerHeading(
-                            widget.user.displayName, 'Good morning,', '3.24')),
+                            widget.user.firstName, 'Good morning,', '3.24')),
                   ],
                 ),
                 Container(
@@ -91,7 +97,7 @@ class _Drawer_MainScreenState extends State<Drawer_MainScreen> {
 
             MLMenuItem(
                 leading: Image.asset(
-                  r'assets/ui/drawerIcon/yourTripsIcon.png',
+                  'assets/ui/drawerIcon/yourTripsIcon.png',
                   height: 22,
                 ),
                 content: Text('Your Trips',
@@ -243,48 +249,6 @@ class _Drawer_MainScreenState extends State<Drawer_MainScreen> {
       ),
     );
 
-    // return SafeArea(
-    //     child: Scaffold(
-    //   backgroundColor:Mycolor.backgroundColor,
-    //
-    //   body: Container(
-    //     height: MediaQuery.of(context).size.height,
-    //     child: ListView(
-    //
-    //       children: [
-    //         Common_Widgets_Class.Topbar(context,(){Navigator.pop(context);},'WELCOME'),
-    //         Padding(
-    //           padding: const EdgeInsets.only(right: 15,left: 15),
-    //           child: Column(
-    //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //
-    //               Common_Widgets_Class.getMasterHeading('Welcome!'),
-    //               _getTextFieldColumn('Phone number ',phnctrl,isCorrectNumber, (CountryCode countrycode){
-    //                 print(countrycode.dialCode + phnctrl.text);
-    //               }),
-    //               _getPasswordField(false,psdctrl),
-    //               _buttonText('Forgot password?',(){}),
-    //
-    //               _BigBlueButton('Login',(){
-    //               Navigator.push(context, MaterialPageRoute(builder: (context) => Drawer_MainScreenUp(),));
-    //                 // Drawer_MainScreen_In
-    //               }),
-    //               _buttonText('Create My Account',(){
-    //
-    //               }),
-    //               _otherSignInOption(),
-    //
-    //             //  _upperTextWid(), _getCrousel(), _bottomWid(),
-    //             ],
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // ));
-    //
   }
 
   _upperTextWid() {

@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/features/Select_your_car/presentation/pages/select-your-car.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
@@ -102,7 +103,7 @@ import 'package:passenger/general/BottomWidgets.dart';
     });
     LatLng sourceLocation;
     LatLng destinationLocation;
-    User user;
+    UserModal user;
   @override
   _Select_your_fleetState createState() => _Select_your_fleetState();
 }
@@ -169,7 +170,7 @@ class _Select_your_fleetState extends State<Select_your_fleet> {
             Common_Widgets_Class.TopbarWhiteBase(context,(){
               Navigator.pop(context);
             },'Select Your Fleet'
-                '',widget.user.photoURL),
+                '',widget.user.photoUri),
 
             Positioned(
               child: Padding(

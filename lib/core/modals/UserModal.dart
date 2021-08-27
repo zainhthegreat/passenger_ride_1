@@ -1,10 +1,5 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'UserModal.g.dart';
 
@@ -21,6 +16,15 @@ String email  ;
 String photoUri ;
 String homeAddress ;
 
+/*
+    "passenger": {
+    "passengerId": "string",
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "photoUri": "string",
+    "homeAddress": "string",
+  },*/
 
 
 UserModal({
@@ -34,6 +38,7 @@ UserModal({
 
 factory UserModal. fromJson(Map<String, dynamic> json) => _$UserModalFromJson(json);
 Map<String, dynamic> toJson() => _$UserModalToJson(this);
+
 
 
 }

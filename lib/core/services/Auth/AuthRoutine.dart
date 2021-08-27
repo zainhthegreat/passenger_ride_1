@@ -7,13 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:passenger/core/modals/CreateUserRequestModal.dart';
 import 'package:passenger/core/modals/UserModal.dart';
-// import 'package:passenger/core/services/FCM/Token.dart';
-import 'package:passenger/features/Drawer/presentation/pages/DrawerMaster.dart';
-import 'package:passenger/features/JourneyStory/presentation/pages/maps.dart';
 import 'package:passenger/features/signupTerms/presentation/pages/signUpTermsScreen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
 import 'package:passenger/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -32,11 +28,11 @@ class AuthRoutine {
     if (userIsReturning) {
       get_user(user.uid);
 
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Drawer_MainScreen(user: user,),
-          ));
+      // Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => Drawer_MainScreen(user: user,),
+      //     ));
     } else {
       // await resgister_user(CreateUserRequestModal(fcmToken: FCM_code,loginMethod: ,password: ,user: ));
       Navigator.push(
@@ -94,7 +90,7 @@ return  UserModal.fromJson(ds.data());
     createUserRequestModal.fcmToken =await getFCMtoken();
 
 
-    String registeruserURL = 'login/register_passenger';
+    String registeruserURL = '/login/register_passenger';
     String requestURL = serverUrl_passenger+ registeruserURL;
    print(requestURL);
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +10,7 @@ import 'package:passenger/features/Drawer/presentation/pages/DrawerMaster.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
+import 'package:passenger/util.dart';
 import 'package:regexpattern/regexpattern.dart';
 import 'dart:async';
 import 'package:passenger/features/sigin-otp/presentation/pages/siginInOtpScreen.dart';
@@ -73,19 +76,15 @@ class _SiginUpState extends State<SiginUp> {
                           phoneNumber:
                               Country_code.dialCode ?? '+92' + phnctrl.text,
                           verificationCompleted:
-                              (PhoneAuthCredential credential) {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return Drawer_MainScreen();
-
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Sigin_otp(
-                                        Country_code.dialCode ??
-                                            '+92' + phnctrl.text),
-                                  ));
-                            }));
+                              (PhoneAuthCredential credential) async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Sigin_otp(
+                                    Country_code.dialCode ??
+                                        '+92' + phnctrl.text),
+                              ),
+                            );
                           },
                           verificationFailed: (FirebaseAuthException e) {
                             Alert(
@@ -98,9 +97,11 @@ class _SiginUpState extends State<SiginUp> {
                             print("CODE SENT");
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return Sigin_otp(verificationId);
+                              return Sigin_otp(Country_code.dialCode ??
+                                  '+92' + phnctrl.text);
                             }));
                           },
+                          timeout: const Duration(seconds: 59),
                           codeAutoRetrievalTimeout: (String verificationId) {
                             Alert(
                               context: context,

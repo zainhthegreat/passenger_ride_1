@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/features/passenger-profile/presentation/pages/PassengerProfileScreen.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
@@ -21,7 +22,7 @@ import 'package:passenger/general/BottomWidgets.dart';
 import 'package:provider/provider.dart';
 
 class Maps extends StatefulWidget {
-  User user;
+  UserModal user;
 
   Maps(this.user, this.closefun, {Key key}) : super(key: key);
   final Function closefun;
@@ -51,7 +52,6 @@ class _MapsState extends State<Maps> {
       child: new Scaffold(
         body: Column(
           children: [
-            Container(),
             Expanded(
               child: Stack(
                 children: [
@@ -70,7 +70,7 @@ class _MapsState extends State<Maps> {
                         boxShadow: <BoxShadow>[
                           BoxShadow(
                             color: Mycolor.backgroundColor,
-                            blurRadius: 10,
+                            blurRadius: 2,
                             offset: Offset(0, 10),
                           ),
                         ],
@@ -105,14 +105,14 @@ class _MapsState extends State<Maps> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            Pasenger_Profile(),
+                                        builder: (context) => Pasenger_Profile(
+                                            widget.user),
                                       ));
                                 },
                                 child: CircleAvatar(
                                   radius: 20.0,
-                                  backgroundImage:
-                                      NetworkImage(widget.user.photoURL),
+                                  // backgroundImage:
+                                  // NetworkImage(widget.user.photoURL),
                                   backgroundColor: Colors.blue,
                                 ),
                               )
@@ -252,10 +252,6 @@ class _MapsState extends State<Maps> {
       return Bottom_widgets.RateDriver(context, () {
         context.read<JourneyProvider>().main();
       });
-
-
-
-
 
     return Text(
       'provider works 1',

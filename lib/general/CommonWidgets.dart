@@ -395,7 +395,7 @@ _getTopRowForWhiteBase(back, label, picUrl) {
                 padding: const EdgeInsets.only(right: 10),
                 child: CircleAvatar(
                   radius: 17.0,
-                  backgroundImage: NetworkImage(picUrl),
+                  backgroundImage: NetworkImage("dfsddsf..sdfsdfs.fsd.fs"),
                   backgroundColor: Colors.transparent,
                 ),
               )

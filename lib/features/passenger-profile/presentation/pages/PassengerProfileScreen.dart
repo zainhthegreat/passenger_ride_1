@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
@@ -15,9 +16,11 @@ import 'dart:io';
 
 
 class Pasenger_Profile extends StatefulWidget {
-
-  String name = "Ali Ahmed";
+  UserModal user;
+ // String name = user.firstName;
   String rating = '4.5';
+
+  Pasenger_Profile(this.user);
 
   @override
   _PassengerProfileState createState() => _PassengerProfileState();
@@ -27,6 +30,9 @@ class Pasenger_Profile extends StatefulWidget {
 // counter tutorial link
 //https://stackoverflow.com/questions/54610121/flutter-countdown-timer
 class _PassengerProfileState extends State<Pasenger_Profile> {
+
+
+
   TextEditingController otpctrl = TextEditingController();
   bool isCorrectNumber = false;
   bool isPassVisible = false;
@@ -60,6 +66,7 @@ class _PassengerProfileState extends State<Pasenger_Profile> {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
         child: Scaffold(
       backgroundColor: Mycolor.backgroundColor,
@@ -81,7 +88,7 @@ class _PassengerProfileState extends State<Pasenger_Profile> {
                 children: [
                   Text('Passenger',style: GoogleFonts.poppins(color: Mycolor.h1color.withOpacity(0.3),fontSize: 16,fontWeight: FontWeight.bold),),
            Container(height: 5,),
-                  Text(widget.name,style: GoogleFonts.poppins(color: Mycolor.h1color,fontSize: 20,fontWeight: FontWeight.bold),),
+                  Text(widget.user.firstName,style: GoogleFonts.poppins(color: Mycolor.h1color,fontSize: 20,fontWeight: FontWeight.bold),),
                   Container(height: 5,),
 
                   Row(

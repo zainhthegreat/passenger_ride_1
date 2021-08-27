@@ -212,7 +212,7 @@ class _Select_your_carState extends State<Select_your_car> {
             Common_Widgets_Class.TopbarWhiteBase(context,(){
               Navigator.pop(context);
             },'Select Your Service'
-                '',widget.bookingRoutine.user.photoURL),
+                '',widget.bookingRoutine.user.photoUri),
 
             Positioned(
               child: Padding(
@@ -258,7 +258,7 @@ class _Select_your_carState extends State<Select_your_car> {
                                               BookingRequestModal(
 
                                                 fleetId:  widget.fleetRequestModal.fleetId,
-                                                passengerId: widget.bookingRoutine.user.uid,
+                                                passengerId: widget.bookingRoutine.user.passengerId,
                                                 serviceId: availableServicesRequestModal[index].serviceId,
                                                 arrivedAtLocationTime: 0,
 

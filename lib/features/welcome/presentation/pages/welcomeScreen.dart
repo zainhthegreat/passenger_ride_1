@@ -38,18 +38,13 @@ class _SiginUpState extends State<SiginUpScreen> {
               Common_Widgets_Class.getMasterHeadingWithUpperSubHeading(
                   'Get a new experience', 'Hello, nice to meet you!'),
 
-              // _getTextFieldColumn('',phnctrl,isCorrectNumber, (CountryCode countrycode){
-              //   Country_code = countrycode;
-              //   print(Country_code.dialCode + phnctrl.text);
-              // }),
-
               _crousalView(),
 
               _BigBlueButton('Login with Phone ', () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Sigin(),
+                      builder: (context) => Sigin(false),
                     ));
               }),
 

@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,9 +11,12 @@ import 'package:passenger/core/enums/signinMethod.dart';
 import 'package:passenger/core/modals/CreateUserRequestModal.dart';
 import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/core/services/Auth/AuthRoutine.dart';
+import 'package:passenger/features/Drawer/presentation/pages/drawer_core.dart';
+import 'package:passenger/features/Select_Destination/presentation/pages/select-destination.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
 import 'package:passenger/general/variables.dart';
+import 'package:passenger/util.dart';
 import 'package:regexpattern/regexpattern.dart';
 import 'package:passenger/features/signupTerms/presentation/pages/signUpTermsScreen.dart';
 import 'package:passenger/features/custom-rides/presentation/pages/custom-ridesScreen.dart';
@@ -16,17 +24,20 @@ import 'package:passenger/features/custom-rides/presentation/pages/custom-ridesS
 import 'dart:async';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'dart:convert' as convert;
 
 import 'package:passenger/features/Drawer/presentation/pages/DrawerMaster.dart';
-class Sigup_Profile extends StatefulWidget {
 
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+class Sigup_Profile extends StatefulWidget {
   final uid;
   Sigup_Profile(this.uid);
   @override
   _SiginState createState() => _SiginState();
 }
-
 
 // counter tutorial link
 //https://stackoverflow.com/questions/54610121/flutter-countdown-timer
@@ -37,12 +48,14 @@ class _SiginState extends State<Sigup_Profile> {
   final _formKey = GlobalKey<FormState>();
   //image choohoosing
 
-  final TextEditingController textCtrlFname =TextEditingController(text: 'zaid');
-  final TextEditingController textCtrlLname =TextEditingController(text: 'saeed');
-  final TextEditingController textCtrlEmail =TextEditingController(text: 'zaid@g.com');
-  final TextEditingController textCtrladdress =TextEditingController(text: 'street 7 house 8 ');
-  final TextEditingController textCtrlpassword =TextEditingController(text: '123456');
-  final TextEditingController textCtrlConfirmpassword =TextEditingController(text: '123456');
+  final TextEditingController textCtrlFname =
+      TextEditingController(text: 'John');
+  final TextEditingController textCtrlLname =
+      TextEditingController(text: 'Spike');
+  final TextEditingController textCtrlEmail =
+      TextEditingController(text: 'JohnSpike123@gmail.com');
+  final TextEditingController textCtrladdress =
+      TextEditingController(text: 'street 7, house 8 ');
 
   File _image;
   final picker = ImagePicker();
@@ -53,20 +66,18 @@ class _SiginState extends State<Sigup_Profile> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+
       } else {
         print('No image selected.');
       }
     });
   }
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,16 +88,19 @@ class _SiginState extends State<Sigup_Profile> {
         height: MediaQuery.of(context).size.height,
         child: ListView(
           children: [
-            Common_Widgets_Class.TopbarwithChooseProfileImage(context, () {
-              Navigator.pop(context);
-            }, 'WELCOME',(){
-              getImage();
-
-            },_image ,90.0),
-
+            Common_Widgets_Class.TopbarwithChooseProfileImage(
+                context,
+                () {
+                  Navigator.pop(context);
+                },
+                'WELCOME',
+                () {
+                  getImage();
+                },
+                _image,
+                90.0),
             Form(
               key: _formKey,
-
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Column(
@@ -95,6 +109,7 @@ class _SiginState extends State<Sigup_Profile> {
                     TextFormField(
                       controller: textCtrlFname,
                       decoration: new InputDecoration(
+                        labelText: 'First Name',
                         hintText: "First name",
                       ),
                       validator: (value) {
@@ -117,7 +132,7 @@ class _SiginState extends State<Sigup_Profile> {
                       },
                     ),
                     TextFormField(
-                       controller: textCtrlEmail,
+                      controller: textCtrlEmail,
                       decoration: new InputDecoration(
                         hintText: "Email",
                       ),
@@ -129,7 +144,7 @@ class _SiginState extends State<Sigup_Profile> {
                       },
                     ),
                     TextFormField(
-controller: textCtrladdress,
+                      controller: textCtrladdress,
                       decoration: new InputDecoration(
                         hintText: "Home address",
                       ),
@@ -140,139 +155,98 @@ controller: textCtrladdress,
                         return null;
                       },
                     ),
-                    TextFormField(
-                      controller: textCtrlpassword,
-                      decoration: new InputDecoration(
-                          hintText: "Password",
-                          suffixIcon:_getPassLeading()
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
 
-                    ),
-                    TextFormField(
+                    _BigBlueButton('Create Account', () async {
 
-                        controller: textCtrlConfirmpassword,
-                      decoration: new InputDecoration(
-                          hintText: "Confirm Password",
-                          suffixIcon:_getPassLeading()
-                      ),
-                      validator: (value) {
 
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-
-                    ),
-
-                    _BigBlueButton('Create Account',(){
-                      // Validate returns true if the form is valid, or false
-                      // otherwise.
-
-                      if (_formKey.currentState.validate()) {
-                        final authRoutine = AuthRoutine();
-                        authRoutine.resgister_user(CreateUserRequestModal(
-                          loginMethod:LoginMethod.GOOGLE ,
-
-                            password: textCtrladdress.text,user: UserModal(
+//Creating a CreateUserRequestModal to upload to firebase as well as await
+                      CreateUserRequestModal userModal =
+                      CreateUserRequestModal(
+                        fcmToken: await FirebaseMessaging.instance.getToken(),
+                        loginMethod: LoginMethod.GOOGLE,
+                        user: UserModal(
                           photoUri: '',
-                          passengerId: widget.uid,email: textCtrlEmail.text,firstName: textCtrlFname.text,homeAddress: textCtrladdress.text,lastName: textCtrlLname.text,
+                          passengerId: widget.uid.toString(),
+                          email: textCtrlEmail.text,
+                          firstName: textCtrlFname.text,
+                          homeAddress: textCtrladdress.text,
+                          lastName: textCtrlLname.text,
+                        ),
+                      );
 
-                        )) ).then((value) {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
+                      //TODO uncommenting
+//POSTING USER PROFILE TO the DATABASE
 
-                        });
-                        // If the form is valid, display a Snackbar.
-                        // Scaffold.of(context)
-                        //     .showSnackBar(SnackBar(content: Text('Processing Data')));
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => Drawer_MainScreen(),));
+                      final response = await http.post(
+                        Uri.parse('$baseURL/login/register_passenger'),
+                        headers: <String, String>{
+                          'Content-Type': 'application/json; charset=UTF-8',
+                        },
+                        body: jsonEncode(userModal.toJson()),
+                      );
+
+                      if (response.statusCode == 201 || response.statusCode == 200) {
+
+                        //Entering data to firebase also
+                       Map<String, dynamic> data = jsonDecode(convert.jsonEncode(userModal.toJson()));
+                        var returnData = await FirebaseFirestore.instance.collection('user').doc(userModal.user.passengerId).set(data) ;
+
+
+
+
+                       print("POST register_passenger Done!\n");
+                      } else {
+                        // If the server did not return a 201 CREATED response,
+                        // then throw an exception.
+
+                        //TODO uncomment LINE
+                       throw Exception(response.statusCode);
                       }
+
+                      User user= FirebaseAuth.instance.currentUser;
+                      print("USER: ");
+                      print("USER: ");
+                      print("USER: "+userModal.user.passengerId.toString());
+                      print("USER: ");
+                      print("USER: ");
+                      print("USER: ");
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Drawer_MainScreen(user: userModal.user )));
+                      
+                      
+
                     }),
                   ],
                 ),
               ),
             ),
           ],
-        )/* ListView(
-          children: [
-            Common_Widgets_Class.Topbar(context, () {}, 'WELCOME'),
-        new Column(
-          children: <Widget>[
-            new ListTile(
-              // leading: const Icon(Icons.person),
-              title: new TextField(
-                decoration: new InputDecoration(
-                  hintText: "First name",
-                ),
-              ),
-            ),
-            new ListTile(
-              // leading: const Icon(Icons.phone),
-              title: new TextField(
-                decoration: new InputDecoration(
-                  hintText: "Last name",
-                ),
-              ),
-            ),
-            new ListTile(
-              // leading: const Icon(Icons.email),
-              title: new TextField(
-                decoration: new InputDecoration(
-                  hintText: "Email",
-                ),
-              ),
-            ),
-
-            new ListTile(
-              // leading: const Icon(Icons.label),
-              title: new TextField(
-                decoration: new InputDecoration(
-                  hintText: "Home address",
-                ),
-              ),
-            ),
-            new ListTile(
-              // leading: const Icon(Icons.label),
-              title: new TextField(
-                obscureText:isPassVisible ,
-                decoration: new InputDecoration(
-                  hintText: "Password",
-                  suffixIcon:_getPassLeading()
-                ),
-              ),
-            ),
-            _BigBlueButton('Create Account',(){
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => Sigup_Profile( ),
-              //     ));
-
-            }),
-          ],
-        ),
-          ],
-        )*/,
+        )
+        ,
       ),
     ));
   }
 
-_getPassLeading(){
+  _getPassLeading() {
+    return isPassVisible
+        ? IconButton(
+            onPressed: () {
+              setState(() {
+                isPassVisible = !isPassVisible;
+              });
+            },
+            icon: Icon(Icons.remove_red_eye_outlined,
+                color: Mycolor.electricBlue),
+          )
+        : IconButton(
+            onPressed: () {
+              setState(() {
+                isPassVisible = !isPassVisible;
+              });
+            },
+            icon: Icon(Icons.remove_red_eye, color: Mycolor.electricBlue),
+          );
+  }
 
-  return isPassVisible?  IconButton(onPressed: (){setState(() {
-    isPassVisible = !isPassVisible;
-  });},icon:Icon(Icons.remove_red_eye_outlined,color: Mycolor.electricBlue ) ,):IconButton(onPressed: (){setState(() {
-    isPassVisible = !isPassVisible;
-  });},icon:Icon(Icons.remove_red_eye,color: Mycolor.electricBlue ) ,);
-
-}
   _getcountryDropDown(fun) {
     return CountryCodePicker(
       onChanged: fun,
@@ -357,34 +331,39 @@ _getPassLeading(){
                     height: 0,
                     width: 0,
                   ),
-
           )),
     );
   }
 
-  _CircleIconButton(String str,String timer, Function fun) {
+  _CircleIconButton(String str, String timer, Function fun) {
     return Row(
-      mainAxisAlignment:MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         RichText(
           text: TextSpan(
-
             children: <TextSpan>[
-              TextSpan(text:str, style:GoogleFonts.poppins(color: Mycolor.h1color,fontSize: 14,fontWeight: FontWeight.normal)),
-              TextSpan(text: timer, style:GoogleFonts.poppins(color: Mycolor.electricBlue,fontSize: 14,fontWeight: FontWeight.bold)),
-
+              TextSpan(
+                  text: str,
+                  style: GoogleFonts.poppins(
+                      color: Mycolor.h1color,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal)),
+              TextSpan(
+                  text: timer,
+                  style: GoogleFonts.poppins(
+                      color: Mycolor.electricBlue,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold)),
             ],
           ),
-        ) ,
+        ),
         RaisedButton(
           padding: const EdgeInsets.all(10),
-
-
           elevation: 5,
-          onPressed:fun,
+          onPressed: fun,
           child: new Icon(
             Icons.arrow_forward,
-            color:Mycolor.h1color,
+            color: Mycolor.h1color,
             size: 20.0,
           ),
           shape: new CircleBorder(),
@@ -392,7 +371,6 @@ _getPassLeading(){
         ),
       ],
     );
-
   }
 
   _buttonText(str, fun) {
@@ -409,31 +387,36 @@ _getPassLeading(){
       ),
     );
   }
-  _BigBlueButton(String str,Function fun){
+
+  _BigBlueButton(String str, Function fun) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: FlatButton(
-
-        onPressed: fun, child:Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(str,style: GoogleFonts.poppins(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
-          Icon(Icons.arrow_forward,color: Colors.white,size: 30,)
-
-        ],
-      ),
-        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(7.0)),
-
-        padding: EdgeInsets.only(left: 10,bottom: 15,top: 15,right: 10),
+        onPressed: fun,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              str,
+              style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold),
+            ),
+            Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+              size: 30,
+            )
+          ],
+        ),
+        shape: new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(7.0)),
+        padding: EdgeInsets.only(left: 10, bottom: 15, top: 15, right: 10),
         color: Mycolor.electricBlue,
-
       ),
     );
 
-    _loginButton(fun){
-
-
-    }
-
+    _loginButton(fun) {}
   }
 }

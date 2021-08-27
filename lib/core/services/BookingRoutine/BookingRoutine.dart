@@ -4,22 +4,18 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
 import 'package:passenger/core/modals/UserModal.dart';
-import '../../../util.dart';
-import 'dart:convert';
+
 import 'package:passenger/core/modals/FleetRequestModal.dart';
 import 'package:passenger/core/modals/AvailableServicesRequestModal.dart';
 import 'package:passenger/core/modals/BookingRequestModal.dart';
 
 class BookingRoutine{
 
-    final User user;
+    final UserModal user;
     final BuildContext context;
     BookingLocation _bookingLocation = BookingLocation();
 

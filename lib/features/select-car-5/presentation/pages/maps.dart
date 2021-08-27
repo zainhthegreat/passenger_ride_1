@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/features/passenger-profile/presentation/pages/PassengerProfileScreen.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
@@ -19,7 +20,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 class Maps extends StatefulWidget {
-  const Maps(this.closefun,{Key key}) : super(key: key);
+  final UserModal user;
+  const Maps(this.closefun,{Key key, this.user}) : super(key: key);
   final Function closefun;
   static final kInitialPosition = LatLng(-33.8567844, 151.213108);
 
@@ -97,7 +99,7 @@ class _MapsState extends State<Maps> {
                                    Navigator.push(
                                        context,
                                        MaterialPageRoute(
-                                         builder: (context) => Pasenger_Profile(),
+                                         builder: (context) => Pasenger_Profile(widget.user),
                                        ));
                                  },
                                 child: CircleAvatar(

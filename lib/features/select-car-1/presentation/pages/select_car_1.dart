@@ -8,6 +8,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 // import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/pages/select_your_fleet.dart';
 import 'package:passenger/features/passenger-profile/presentation/pages/PassengerProfileScreen.dart';
 import 'package:passenger/general/CommonWidgets.dart';
@@ -38,7 +39,7 @@ enum BookRideRoutine{
 
 }
 class Select_car_1 extends StatefulWidget {
-  User user;
+  UserModal user;
    Select_car_1(this.user,{Key key}) : super(key: key);
 
   static final kInitialPosition = LatLng(-33.8567844, 151.213108);
@@ -85,6 +86,7 @@ class _Select_car_1State extends State<Select_car_1> {
   @override
   void initState() {
     // TODO: implement initState
+    print("cAR 1");
     setSourceAndDestinationIcons();
   }
 
@@ -177,7 +179,7 @@ class _Select_car_1State extends State<Select_car_1> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            Pasenger_Profile(),
+                                            Pasenger_Profile(widget.user),
                                       ));
                                 },
                                 child: CircleAvatar(
