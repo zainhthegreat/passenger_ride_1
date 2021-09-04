@@ -307,7 +307,6 @@ class _SiginUpState extends State<SiginUpScreen> {
               disableCenter: false,
               onPageChanged: (int index, CarouselPageChangedReason reason) {
                 setState(() {
-                  print('333');
                   currindex = index;
                 });
               }),

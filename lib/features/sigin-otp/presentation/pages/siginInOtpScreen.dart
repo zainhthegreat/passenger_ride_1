@@ -18,13 +18,12 @@ import 'package:passenger/features/signupTerms/presentation/pages/signUpTermsScr
 
 import 'dart:async';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../../util.dart';
 
-import 'package:http/http.dart' as http;
-
 class Sigin_otp extends StatefulWidget {
-  String verificationId;
+  String verificationId = '';
   Sigin_otp(this.verificationId);
   @override
   _SiginState createState() => _SiginState();
@@ -40,10 +39,8 @@ class _SiginState extends State<Sigin_otp> {
 
   //counter timer varaibles
   Timer _timer;
-  int _start = 59;
+  int _start = 30;
   String currentText;
-
-  bool userExists;
 
   @override
   void initState() {
@@ -71,104 +68,106 @@ class _SiginState extends State<Sigin_otp> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      backgroundColor: Mycolor.backgroundColor,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: ListView(
-          children: [
-            Common_Widgets_Class.Topbar(context, () {
-              Navigator.pop(context);
-            }, 'BACK'),
-            Padding(
-              padding: const EdgeInsets.only(right: 15, left: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Common_Widgets_Class
-                      .getMasterHeadingWithUpperSubHeadingLowerSubHeadingWithBlue(
+          backgroundColor: Mycolor.backgroundColor,
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            child: ListView(
+              children: [
+                Common_Widgets_Class.Topbar(context, () {
+                  Navigator.pop(context);
+                }, 'BACK'),
+                Padding(
+                  padding: const EdgeInsets.only(right: 15, left: 15),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Common_Widgets_Class
+                          .getMasterHeadingWithUpperSubHeadingLowerSubHeadingWithBlue(
                           'Enter your OTP code',
                           'Phone Verification',
                           'Enter the 4-digit code sent to you at ${widget.verificationId}',
                           ' did you enter the correct number?'),
-                  // _getPasswordField(false, otpctrl),
-                  Container(
-                    height: 15,
-                  ),
+                      // _getPasswordField(false, otpctrl),
+                      Container(
+                        height: 15,
+                      ),
 
-                  _getOTPWidget(),
-                  //
-                  // _buttonText('Forgot password?', () {}),
-
-                  _CircleIconButton(
-                      'Resending in ', _start.toString() + ' seconds',
-                      () async {
-
-                    FirebaseAuth auth = FirebaseAuth.instance;
-                    PhoneAuthCredential phoneAuthCredential =
-                        PhoneAuthProvider.credential(
-                            verificationId: widget.verificationId,
-                            smsCode: otpctrl.value.text);
-
-                    try {
-                      await auth.signInWithCredential(phoneAuthCredential);
-                      print(auth.currentUser.uid);
-                      final authRoutine = AuthRoutine();
-                      authRoutine.InititeRoutine(user: auth.currentUser);
-
-                      // await setUserDetails(auth.currentUser.uid,phone: auth.currentUser.phoneNumber);
-
-                      var url = Uri.parse(baseURL +
-                          '/login/does_passenger_exist?passengerId=' +
-                          auth.currentUser.phoneNumber);
-                      http.Response response = await http.get(url);
-
-                      if (response.statusCode == 200) {
-                        userExists = jsonDecode(response.body)['value'];
-
-
-                        if (userExists)
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return Sigin(true);
-                          }));
-                        else
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return SiginUpTerms(auth.currentUser.uid);
-                          }));
-                      }
-                      // userExists= await authRoutine.does_user_exist(auth.currentUser.uid,null);
+                      _getOTPWidget(),
                       //
-                      //
-                      // if(userExists)
-                      //   Navigator.push(context,
-                      //       MaterialPageRoute(builder: (context) {
-                      //         return Sigin();
-                      //
-                      //       }));
-                      //
-                      // else
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (context) {
-                      //   return SiginUpTerms(auth.currentUser.uid);
-                      // }));
-                    } catch (e) {
-                      print(e);
-                    }
+                      // _buttonText('Forgot password?', () {}),
+
+                      _CircleIconButton(
+                          'Resending in ', _start.toString() + ' seconds',
+                              () async {
+                            FirebaseAuth auth = FirebaseAuth.instance;
+                            PhoneAuthCredential phoneAuthCredential =
+                            PhoneAuthProvider.credential(
+                                verificationId: widget.verificationId,
+                                smsCode: otpctrl.value.text);
+
+                            try {
+                              await auth.signInWithCredential(phoneAuthCredential);
+                              print("LOGGED IN");
+                              print(auth.currentUser.uid);
+                              final authRoutine = AuthRoutine();
+                              authRoutine.InititeRoutine(user: auth.currentUser);
+
+                              print(auth.currentUser.phoneNumber);
+
+                              // await setUserDetails(auth.currentUser.uid,phone: auth.currentUser.phoneNumber);
+
+
+                              //
+                              // bool userExists=false;
+                              // var url = Uri.parse(baseURL +
+                              //     '/login/does_passenger_exist?passengerId=' +
+                              //     auth.currentUser.phoneNumber);
+                              // http.Response response = await http.get(url);
+                              //
+                              // if (response.statusCode == 200) {
+                              //   userExists = jsonDecode(response.body)['value'];
+                              //
+                              //
+                              //   if (userExists)
+                              //     Navigator.push(context,
+                              //         MaterialPageRoute(builder: (context) {
+                              //           return Sigin(true);
+                              //         }));
+                              //   else
+                              //     Navigator.push(context,
+                              //         MaterialPageRoute(builder: (context) {
+                              //           return SiginUpTerms(auth.currentUser.uid);
+                              //         }));
+                              // }
+
+
+
+
+
+
+
+
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return SiginUpTerms(auth.currentUser.uid);
+                                  }));
+                            } catch (e) {
+                              print(e);
+                            }
 
 // Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),));
-                    // Sigin_In
-                  }),
+                            // Sigin_In
+                          }),
 
-                  //  _upperTextWid(), _getCrousel(), _bottomWid(),
-                ],
-              ),
+                      //  _upperTextWid(), _getCrousel(), _bottomWid(),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    ));
+          ),
+        ));
   }
 
   _getOTPWidget() {
@@ -196,7 +195,7 @@ class _SiginState extends State<Sigin_otp> {
         fieldHeight: 50,
         fieldWidth: 40,
         activeFillColor:
-            /* hasError ? Colors.orange : */ Colors.grey,
+        /* hasError ? Colors.orange : */ Colors.grey,
         activeColor: Colors.grey,
         disabledColor: Colors.grey,
         inactiveColor: Colors.grey,
@@ -285,17 +284,17 @@ class _SiginState extends State<Sigin_otp> {
             prefixIcon: _getcountryDropDown(codeNumberFun),
             suffixIcon: isvisible
                 ? Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.check_circle_rounded,
-                      color: Mycolor.primaryColor,
-                      size: 28,
-                    ),
-                  )
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Icon(
+                Icons.check_circle_rounded,
+                color: Mycolor.primaryColor,
+                size: 28,
+              ),
+            )
                 : Container(
-                    height: 0,
-                    width: 0,
-                  ),
+              height: 0,
+              width: 0,
+            ),
           )),
     );
   }
@@ -313,17 +312,17 @@ class _SiginState extends State<Sigin_otp> {
             hintText: "Password",
             suffixIcon: isvisible
                 ? Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.check_circle_rounded,
-                      color: Mycolor.primaryColor,
-                      size: 28,
-                    ),
-                  )
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Icon(
+                Icons.check_circle_rounded,
+                color: Mycolor.primaryColor,
+                size: 28,
+              ),
+            )
                 : Container(
-                    height: 0,
-                    width: 0,
-                  ),
+              height: 0,
+              width: 0,
+            ),
           )),
     );
   }
@@ -385,7 +384,7 @@ class _SiginState extends State<Sigin_otp> {
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
-      (Timer timer) {
+          (Timer timer) {
         if (_start == 0) {
           setState(() {
             timer.cancel();
@@ -399,3 +398,56 @@ class _SiginState extends State<Sigin_otp> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+/*
+_CircleIconButton(
+'Resending in ', _start.toString() + ' seconds',
+() async {
+
+FirebaseAuth auth = FirebaseAuth.instance;
+PhoneAuthCredential phoneAuthCredential =
+PhoneAuthProvider.credential(
+    verificationId: widget.verificationId,
+    smsCode: otpctrl.value.text);
+print("1");
+try {
+await auth.signInWithCredential(phoneAuthCredential);
+print(auth.currentUser.uid);
+final authRoutine = AuthRoutine();
+authRoutine.InititeRoutine(user: auth.currentUser);
+print("1");
+// await setUserDetails(auth.currentUser.uid,phone: auth.currentUser.phoneNumber);
+
+
+// userExists= await authRoutine.does_user_exist(auth.currentUser.uid,null);
+//
+//
+// if(userExists)
+//   Navigator.push(context,
+//       MaterialPageRoute(builder: (context) {
+//         return Sigin();
+//
+//       }));
+//
+// else
+// Navigator.push(context,
+//     MaterialPageRoute(builder: (context) {
+//   return SiginUpTerms(auth.currentUser.uid);
+// }));
+} catch (e) {
+print(e);
+}
+
+// Navigator.push(context, MaterialPageRoute(builder: (context) => SiginUpTerms(),));
+// Sigin_In
+}),
+*/

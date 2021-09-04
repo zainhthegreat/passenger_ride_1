@@ -161,7 +161,7 @@ class _SiginState extends State<Sigup_Profile> {
 
 //Creating a CreateUserRequestModal to upload to firebase as well as await
                       CreateUserRequestModal userModal =
-                      CreateUserRequestModal(
+                       CreateUserRequestModal(
                         fcmToken: await FirebaseMessaging.instance.getToken(),
                         loginMethod: LoginMethod.GOOGLE,
                         user: UserModal(
@@ -173,6 +173,13 @@ class _SiginState extends State<Sigup_Profile> {
                           lastName: textCtrlLname.text,
                         ),
                       );
+
+                      print(userModal.fcmToken);
+
+                      //storing data in mobile
+                      getSharedPrefs(userModal);
+
+
 
                       //TODO uncommenting
 //POSTING USER PROFILE TO the DATABASE
@@ -188,8 +195,8 @@ class _SiginState extends State<Sigup_Profile> {
                       if (response.statusCode == 201 || response.statusCode == 200) {
 
                         //Entering data to firebase also
-                       Map<String, dynamic> data = jsonDecode(convert.jsonEncode(userModal.toJson()));
-                        var returnData = await FirebaseFirestore.instance.collection('user').doc(userModal.user.passengerId).set(data) ;
+                      // Map<String, dynamic> data = jsonDecode(convert.jsonEncode(userModal.toJson()));
+                      //  var returnData = await FirebaseFirestore.instance.collection('user').doc(userModal.user.passengerId).set(data) ;
 
 
 
@@ -420,3 +427,4 @@ class _SiginState extends State<Sigup_Profile> {
     _loginButton(fun) {}
   }
 }
+

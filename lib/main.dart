@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:passenger/core/modals/CreateUserRequestModal.dart';
 import 'package:passenger/core/modals/UserModal.dart';
+import 'package:passenger/features/Splash_Screen/presentation/pages/splashScreen.dart';
 import 'package:passenger/util.dart';
 import 'package:provider/provider.dart';
 import 'package:passenger/features/signup-profile/presentation/pages/siginUpProfileScreen.dart';
@@ -15,7 +16,6 @@ import 'package:firebase_core/firebase_core.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await createPref(); //from util to get shared preferences
   runApp(MyApp());
 }
 
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
 
 
-            return Sigup_Profile /*SiginUpScreen*/ ("4LdWS6y5peYOxOUMm7JC9a89pc13");
+            return SplashScreen() /*SiginUpScreen*/;
           }
         ),
       ),
