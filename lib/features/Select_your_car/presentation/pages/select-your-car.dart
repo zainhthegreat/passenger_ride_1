@@ -259,7 +259,9 @@ class _Select_your_carState extends State<Select_your_car> {
 
                                                 fleetId:  widget.fleetRequestModal.fleetId,
                                                 passengerId: widget.bookingRoutine.user.passengerId,
-                                                serviceId: availableServicesRequestModal[index].serviceId,
+
+                                                //TODO CHANGED
+                                                serviceId: availableServicesRequestModal[index].serviceTypeId,
                                                 arrivedAtLocationTime: 0,
 
 
@@ -323,7 +325,9 @@ class _Select_your_carState extends State<Select_your_car> {
                                          }
 
                                         },
-                                        child: _fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].serviceFare,availableServicesRequestModal[index].arrivalTime,availableServicesRequestModal[index].serviceIcon),
+                                        child:_fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].baseFare,availableServicesRequestModal[index].waitingTimeLimitAtArrival,availableServicesRequestModal[index].photoUri),
+
+                                        // _fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].serviceFare,availableServicesRequestModal[index].arrivalTime,availableServicesRequestModal[index].serviceIcon),
                                       ),
                                     );
 
