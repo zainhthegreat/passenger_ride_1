@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Expanded(
         child: Container(
           color: Colors.indigo,
-          child: _run(Text('Loading...', style: TextStyle(fontSize: 40)), () async {
+          child: _run(Text('PRIME', style: TextStyle(fontSize: 40,color: Colors.black)), () async {
             prefs = await SharedPreferences.getInstance();
 
             if(!prefs.containsKey("loggedIn"))

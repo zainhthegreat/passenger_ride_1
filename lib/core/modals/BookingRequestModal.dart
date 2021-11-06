@@ -46,7 +46,7 @@ class BookingRequestModal with ChangeNotifier {
    @required this.businessId,
    @required this.passengerId,
    @required this.driverId,
-   @required this.fleetId,
+    this.fleetId,
    @required this.serviceId,
    @required this.vehicleId,
    @required this.bookingZoneId,

@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/features/Findinng_Match/presentation/pages/finding_match.dart';
 import 'package:passenger/general/CommonWidgets.dart';
 import 'package:passenger/general/strings.dart';
@@ -143,13 +144,22 @@ import 'package:provider/provider.dart';
 import '../../../../util.dart';
 
 class Select_your_car extends StatefulWidget {
+
+  LatLng sourceLocation;
+  LatLng destinationLocation;
+  UserModal user;
+
+
+  Select_your_car({@required this.sourceLocation,@required  this.destinationLocation,@required  this.user});
+
+  /*
   FleetRequestModal fleetRequestModal;
   BookingRoutine bookingRoutine;
   Select_your_car({
     @required this.fleetRequestModal,
     @required this.bookingRoutine,
 
-  });
+  });*/
   @override
   _Select_your_carState createState() => _Select_your_carState();
 }
@@ -188,14 +198,16 @@ class _Select_your_carState extends State<Select_your_car> {
   @override
   Widget build(BuildContext context) {
 
+    //ADDED
+    BookingRoutine bookingRoutine = BookingRoutine(context: context,user: widget.user);
+    bookingRoutine.setBookinglocation(widget.sourceLocation, widget.destinationLocation);
+
 
     return SafeArea(
         child: Scaffold(
       backgroundColor:Mycolor.electricGreen,
 
       body: Container(
-
-
         child: Stack(
           // crossAxisAlignment: CrossAxisAlignment.start,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,7 +224,7 @@ class _Select_your_carState extends State<Select_your_car> {
             Common_Widgets_Class.TopbarWhiteBase(context,(){
               Navigator.pop(context);
             },'Select Your Service'
-                '',widget.bookingRoutine.user.photoUri),
+                '',bookingRoutine.user.photoUri),
 
             Positioned(
               child: Padding(
@@ -220,7 +232,7 @@ class _Select_your_carState extends State<Select_your_car> {
                 child: Column(
                   mainAxisAlignment:MainAxisAlignment.spaceBetween ,
                   children: [
-                    _getFromToTripTile(widget.bookingRoutine.getBookingLocatiion().startLocation.toString(),widget.bookingRoutine.getBookingLocatiion().endLocation.toString()),
+                    _getFromToTripTile(bookingRoutine.getBookingLocatiion().startLocation.toString(),bookingRoutine.getBookingLocatiion().endLocation.toString()),
 
 
                     Column(
@@ -244,7 +256,7 @@ class _Select_your_carState extends State<Select_your_car> {
                                 ],
                               ),
                               FutureBuilder(
-                                future: widget.bookingRoutine.getServicesfromLocal(),
+                                future: bookingRoutine.getServicesfromLocal(),
                                 builder: (context, snapshot) {
                                   if(snapshot.hasData){
                                     List<AvailableServicesRequestModal>  availableServicesRequestModal= snapshot.data;
@@ -254,78 +266,88 @@ class _Select_your_carState extends State<Select_your_car> {
                                       itemBuilder:   (context, index) => FlatButton(
                                         splashColor: Colors.blue,
                                         onPressed: () async {
-                                         var res =  await widget.bookingRoutine.addBookingfromRemote(
-                                              BookingRequestModal(
 
-                                                fleetId:  widget.fleetRequestModal.fleetId,
-                                                passengerId: widget.bookingRoutine.user.passengerId,
+                                          print("Pressing Button !\n\n");
 
-                                                //TODO CHANGED
-                                                serviceId: availableServicesRequestModal[index].serviceTypeId,
-                                                arrivedAtLocationTime: 0,
-
-
-                                                bookingId : getRandomString(22),
-                                                businessId : "string",
-
-                                                driverId : "string",
-                                                vehicleId : "string",
-                                                bookingZoneId : "string",
-                                                rideBookingTime : 0,
-
-                                                rideStartTime : 0,
-                                                pob1Id : "string",
-                                                pob2Id : "string",
-                                                estimatedDistance : 0,
-                                                estimatedFare : 0,
-                                                estimatedTime : 0,
-                                                waitingTime : 0,
-                                                distanceTravelled : 0,
-                                                timeTaken : 0,
-                                                fleetSurcharge : 0,
-                                                fleetDiscount : 0,
-                                                subTotal : 0,
-                                                finalTotal : 0,
-                                                driverRating : 0,
-                                                driverComments : "string",
-                                                passengerRating : 0,
-                                                passengerComments : "string",
-                                                tip : 0,
-                                                driverEarningRecordId : getRandomString(30),
-
-                                              )
-
-                                          );
-
-                                         if(res!=null){
-
-                                           BookingRequestModal bookingresponse =res;
-                                           Alert(
-                                             title: "Booking Added",
-                                             desc: "Booking Added Successful with id ${bookingresponse.bookingId}" ,
-                                             context: context,
-                                             type: AlertType.success,
-                                             buttons: [
-                                               DialogButton(
-                                                 child: Text("okay"),
-                                                 onPressed: () => Navigator.pop(context),
-                                               )
-                                             ],
-                                           ).show();
-                                           print("BOOKING ADDED SUCCESSFUL");
+                                         // var res =  await bookingRoutine.addBookingfromRemote(
+                                         //      BookingRequestModal(
+                                         //
+                                         //       // fleetId:  widget.fleetRequestModal.fleetId,
+                                         //        passengerId: bookingRoutine.user.passengerId,
+                                         //
+                                         //        //TODO CHANGED
+                                         //        serviceId: availableServicesRequestModal[index].serviceTypeId,
+                                         //        arrivedAtLocationTime: 0,
+                                         //
+                                         //
+                                         //        bookingId : getRandomString(22),
+                                         //        businessId : "string",
+                                         //
+                                         //        driverId : "string",
+                                         //        vehicleId : "string",
+                                         //        bookingZoneId : "string",
+                                         //        rideBookingTime : 0,
+                                         //
+                                         //        rideStartTime : 0,
+                                         //        pob1Id : "string",
+                                         //        pob2Id : "string",
+                                         //        estimatedDistance : 0,
+                                         //        estimatedFare : 0,
+                                         //        estimatedTime : 0,
+                                         //        waitingTime : 0,
+                                         //        distanceTravelled : 0,
+                                         //        timeTaken : 0,
+                                         //        fleetSurcharge : 0,
+                                         //        fleetDiscount : 0,
+                                         //        subTotal : 0,
+                                         //        finalTotal : 0,
+                                         //        driverRating : 0,
+                                         //        driverComments : "string",
+                                         //        passengerRating : 0,
+                                         //        passengerComments : "string",
+                                         //        tip : 0,
+                                         //        driverEarningRecordId : getRandomString(30),
+                                         //
+                                         //      )
+                                         //
+                                         //  );
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => Select_your_fleet(serviceSelected: availableServicesRequestModal[index],sourceLocation: widget.sourceLocation,user:widget.user,bookingRoutine: bookingRoutine),));
 
 
-
-                                           Navigator.pop(context);
-                                           Navigator.pop(context);
-                                           Navigator.pop(context);
-                                           Navigator.pop(context);
-                                           Navigator.push(context, MaterialPageRoute(builder:  (context) =>FindingMatch() ));
-
-                                         }
+                                         //
+                                         //  if(res!=null){
+                                         //
+                                         //   //BookingRequestModal bookingresponse =res;
+                                         //   // Alert(
+                                         //   //   title: "Booking Added",
+                                         //   //   desc: "Booking Added Successful with id ${bookingresponse.bookingId}" ,
+                                         //   //   context: context,
+                                         //   //   type: AlertType.success,
+                                         //   //   buttons: [
+                                         //   //     DialogButton(
+                                         //   //       child: Text("okay"),
+                                         //   //       onPressed: () => Navigator.pop(context),
+                                         //   //     )
+                                         //   //   ],
+                                         //   // ).show();
+                                         //   print("BOOKING ADDED SUCCESSFUL");
+                                         //
+                                         //
+                                         //
+                                         //   // Navigator.pop(context);
+                                         //   // Navigator.pop(context);
+                                         //   // Navigator.pop(context);
+                                         //   // Navigator.pop(context);
+                                         //   Navigator.push(context, MaterialPageRoute(builder: (context) => Select_your_fleet(serviceSelected: availableServicesRequestModal[index],sourceLocation: widget.sourceLocation,user:widget.user,bookingRoutine: bookingRoutine),));
+                                         //
+                                         //   // Navigator.push(context, MaterialPageRoute(builder:  (context) =>FindingMatch() ));
+                                         //
+                                         // }
 
                                         },
-                                        child:_fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].baseFare,availableServicesRequestModal[index].waitingTimeLimitAtArrival,availableServicesRequestModal[index].photoUri),
+                                        child:_fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].baseFare,availableServicesRequestModal[index].waitingTimeLimitAtArrival,"https://www.clipartmax.com/png/middle/238-2385495_cute-red-toy-car-clip-art-red-family-car-clipart.png"),
+
+                                        //child:_fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].baseFare,availableServicesRequestModal[index].waitingTimeLimitAtArrival,availableServicesRequestModal[index].photoUri),
 
                                         // _fleetIcon(availableServicesRequestModal[index].serviceName,availableServicesRequestModal[index].serviceFare,availableServicesRequestModal[index].arrivalTime,availableServicesRequestModal[index].serviceIcon),
                                       ),
@@ -485,8 +507,7 @@ return Row(
     );
   }
 
-  _addShopButon(fun
-  ){
+  _addShopButon(fun){
 
     return Row(
       mainAxisAlignment:MainAxisAlignment.end ,

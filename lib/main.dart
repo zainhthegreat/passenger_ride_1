@@ -1,19 +1,29 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:passenger/core/modals/CreateUserRequestModal.dart';
 import 'package:passenger/core/modals/UserModal.dart';
 import 'package:passenger/features/Splash_Screen/presentation/pages/splashScreen.dart';
+import 'package:passenger/schemas/location.dart';
+import 'package:passenger/schemas/service.dart';
 import 'package:passenger/util.dart';
 import 'package:provider/provider.dart';
 import 'package:passenger/features/signup-profile/presentation/pages/siginUpProfileScreen.dart';
 import 'package:passenger/features/Select_your_fleet/presentation/bloc/provider/JourneyStoryState.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:http/http.dart' as http;
 
+import 'core/services/API/ServicesAPI.dart';
 
 
 
 
 Future<void> main() async {
+
+  print("HIIIIIIIIIIII");
+  await fun();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -61,4 +71,20 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+
+
+Future<void> fun()
+async {
+  Service S=Service(Location(32,71.1),Location(32.1,71.1));
+  print(jsonEncode(S.toJson()));
+
+  var url=Uri.parse("http://ec2-34-243-253-36.eu-west-1.compute.amazonaws.com:31200/rideservice/booking/available_services");
+  var response=await http.post(url, headers: <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
+  },body:jsonEncode(S.toJson()));
+
+  print(response.statusCode);
+  print(response.body);
 }

@@ -8,7 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/modals/CreateUserRequestModal.dart';
 import 'core/modals/UserModal.dart';
 
-var baseURL= "http://ec2-34-246-189-160.eu-west-1.compute.amazonaws.com:8086";
+var baseURL= "http://ec2-34-243-253-36.eu-west-1.compute.amazonaws.com:31200";
+
 
 String ipUrl = "192.168.0.117";
 String serverUrl_passenger = 'http://${ipUrl}:8086/';//'192.168.10.8/login/does_passenger_exist?passengerId=1';
