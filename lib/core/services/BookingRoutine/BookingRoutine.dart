@@ -56,12 +56,21 @@ class BookingRoutine{
    _getFleetListfromRemote(var selectedServiceTypeId,var estimatedFare, LatLng sourceLocation) async {
 
 
-     Fleets F=Fleets(selectedServiceTypeId,Location(sourceLocation.latitude,sourceLocation.longitude),estimatedFare);
+     // Fleets F=Fleets("33a06879-91ef-4155-a21f-cb95af7c1aa5",Location(32.1,71),"111.401566");
+     //
+     // var url=Uri.parse("http://ec2-34-243-253-36.eu-west-1.compute.amazonaws.com:31200/rideservice/booking/available_fleets");
+     // var response=await http.post(url, headers: <String, String>{
+     //   'Content-Type': 'application/json; charset=UTF-8',
+     // },body:jsonEncode(F.toJson()));
+
+
+     Fleets F=Fleets("33a06879-91ef-4155-a21f-cb95af7c1aa5",Location(32.1,71),"111.401566");
 
      var url=Uri.parse("http://ec2-34-243-253-36.eu-west-1.compute.amazonaws.com:31200/rideservice/booking/available_fleets");
      var response=await http.post(url, headers: <String, String>{
        'Content-Type': 'application/json; charset=UTF-8',
      },body:jsonEncode(F.toJson()));
+
 
 
      // String available_fleetsUrl = 'booking/available_fleets';
@@ -70,38 +79,40 @@ class BookingRoutine{
      // var response   =await http.get( Uri.parse(requestURL));
      if(response.statusCode!=200) return null;
 
-     List fleetList = jsonDecode(response.body);
-     _FleetRequestModalList=[];
-     fleetList.forEach((element) {
-       FleetRequestModal returningFleet =FleetRequestModal.fromJson(element);
-       _FleetRequestModalList.add(returningFleet);
-       print(returningFleet.name);
-     });
-     // _FleetRequestModalList = FleetRequestModalList;
-     //
-
-
-
-
-
-
-
-
-
-     // QuerySnapshot qs= await FirebaseFirestore.instance.collection('fleet').get() ;
-     //
-     //
-     // List<FleetRequestModal> FleetRequestModalList=[];
-     // qs.docs.forEach((element) {
-     //   log(element.data().toString());
-     //
-     //   FleetRequestModal returningFleet =FleetRequestModal.fromJson(element.data());
-     //
-     //   FleetRequestModalList.add(returningFleet);
+     print("FleetShit" + response.statusCode.toString());
+     // List fleetList = jsonDecode(response.body);
+     // _FleetRequestModalList=[];
+     // fleetList.forEach((element) {
+     //   FleetRequestModal returningFleet =FleetRequestModal.fromJson(element);
+     //   _FleetRequestModalList.add(returningFleet);
      //   print(returningFleet.name);
+     //   print(returningFleet);
      // });
      // _FleetRequestModalList = FleetRequestModalList;
      //
+
+
+
+
+
+
+
+
+
+     QuerySnapshot qs= await FirebaseFirestore.instance.collection('fleet').get() ;
+
+
+     List<FleetRequestModal> FleetRequestModalList=[];
+     qs.docs.forEach((element) {
+       log(element.data().toString());
+
+       FleetRequestModal returningFleet =FleetRequestModal.fromJson(element.data());
+
+       FleetRequestModalList.add(returningFleet);
+       print(returningFleet.name);
+     });
+     _FleetRequestModalList = FleetRequestModalList;
+
 
 
      return   _FleetRequestModalList;
@@ -126,11 +137,9 @@ class BookingRoutine{
 
 
 
-     print("RESPONSE CODE     ${response.statusCode}");
-     print(response.statusCode);
-     print(response.statusCode);
-     print(response.statusCode);
-     print(response.statusCode);
+     print("RESPONSE CODE SERVICES     ${response.statusCode}");
+
+     print("RESPONSE Body     ${jsonDecode(response.body)}");
 
      List fleetList = jsonDecode(response.body);
      fleetList.forEach((element) {

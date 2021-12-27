@@ -267,6 +267,8 @@ class _Select_your_carState extends State<Select_your_car> {
                                         splashColor: Colors.blue,
                                         onPressed: () async {
 
+                                          print("Passenger ID: "+widget.user.passengerId);
+
                                           print("Pressing Button !\n\n");
 
                                          // var res =  await bookingRoutine.addBookingfromRemote(
@@ -311,6 +313,14 @@ class _Select_your_carState extends State<Select_your_car> {
                                          //      )
                                          //
                                          //  );
+                                          print(widget.sourceLocation);
+                                          print(availableServicesRequestModal[index].baseFare);
+                                          print(availableServicesRequestModal[index].serviceName);
+
+                                          print(availableServicesRequestModal[index].serviceTypeId);
+
+
+
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => Select_your_fleet(serviceSelected: availableServicesRequestModal[index],sourceLocation: widget.sourceLocation,user:widget.user,bookingRoutine: bookingRoutine),));
 
 
